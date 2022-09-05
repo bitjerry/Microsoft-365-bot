@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy postgres
-          uses: brentd/fly-staging-app@v1
-          with:
-            image: flyio/postgres
-            name: ${{secrets.PG_NAME}}
+      - uses: brentd/fly-staging-app@v1
+        with:
+          image: flyio/postgres
+          name: ${{secrets.PG_NAME}}
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         with:
