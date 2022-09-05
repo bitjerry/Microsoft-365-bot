@@ -32,11 +32,11 @@ class Pgdb:
             conn.close()
         # return result
 
-    def _query(self, sql: str) -> list:
+    def _query(self, sql: str, data: list) -> list:
         conn = psycopg2.connect(self._dsn)
         cur = conn.cursor()
         try:
-            cur.execute(sql)
+            cur.execute(sql, data)
             return cur.fetchall()
         except Exception as e:
             trace.exception(e)
@@ -65,11 +65,11 @@ class Pgdb:
 #             conn.close()
 #         # return result
 #
-#     def _query(self, sql:str) -> list:
+#     def _query(self, sql:str, data: list) -> list:
 #         conn = sqlite3.connect(self._dsn)
 #         cur = conn.cursor()
 #         try:
-#             res = cur.execute(sql)
+#             res = cur.execute(sql, data)
 #             return res.fetchall()
 #         except Exception as e:
 #             trace.exception(e)

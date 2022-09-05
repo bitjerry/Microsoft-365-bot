@@ -25,9 +25,9 @@ class DbServer(Pgdb):
         self._init_table()
 
     def _init_table(self):
-        sql = "select exists(select * from information_schema.tables where table_name=`apps`)"
-        result = self._query(sql)[0]
-        if not result or not result[0]:
+        sql = "select exists(select * from information_schema.tables where table_name='apps')"
+        result = self._query(sql, [])
+        if not result or not result[0][0]:
             sql = """CREATE TABLE apps (
                     "name" varchar(255) PRIMARY KEY NOT NULL,
                     "client_id" varchar(255) NOT NULL,
