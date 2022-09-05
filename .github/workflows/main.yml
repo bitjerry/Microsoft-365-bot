@@ -14,10 +14,10 @@ jobs:
       - name: Deploy app
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy postgres
-          uses: brentd/fly-staging-app@v1
-          with:
-            image: flyio/postgres
-            name: ${{secrets.PG_NAME}}
+        uses: brentd/fly-staging-app@v1
+        with:
+          image: flyio/postgres
+          name: ${{secrets.PG_NAME}}
       - run: flyctl deploy --remote-only
         with:
           postgres: ${{secrets.PG_NAME}}
