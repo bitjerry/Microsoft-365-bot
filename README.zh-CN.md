@@ -66,6 +66,11 @@ cd Microsoft-365-bot
 ### 部署
 
 ---
+###### 环境变量
+   ```
+   BOT_TOKEN: 机器人token, 通过@BotFather获取
+   ADMIN_ID: tg的用户id (是一串纯数字), 谁使用就填谁的
+   ```
 
 #### Heroku: 
 

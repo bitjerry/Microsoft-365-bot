@@ -73,6 +73,10 @@ cd Microsoft-365-bot
 2. Create an application
 
 3. Setting environment variables
+   ```
+   BOT_TOKEN: Telegram bot token, get it by @BotFather
+   ADMIN_ID: Telegram user ID (123456), usually for yourself
+   ```
 
 #### Heroku: 
 
