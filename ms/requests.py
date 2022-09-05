@@ -65,7 +65,7 @@ class Requests:
         self._client_id = client_id
         self._client_secret = client_secret
         self._tenant_id = tenant_id
-        self._access_token = None
+        self._access_token = ""
         self._token_expires = 0
 
     @staticmethod

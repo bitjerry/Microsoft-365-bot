@@ -7,6 +7,7 @@
 @File: setup
 """
 import os
+import config
 from core import *
 from modules import *
 from flask import Flask, request
@@ -38,4 +39,4 @@ def get_message():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.getenv('PORT', 5000)))
+    app.run(host="0.0.0.0", port=int(config.PORT))

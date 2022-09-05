@@ -1,6 +1,6 @@
 {
   "name": "Microsoft 365 bot",
-  "description": "Manage the Microsoft 365 Global through the telegram bot.",
+  "description": "Manage the Microsoft 365 Global by the telegram bot.",
   "keywords": [
     "Microsoft",
     "telegram",
@@ -14,7 +14,7 @@
   "success_url": "/set_webhook",
   "env": {
     "BOT_TOKEN": {
-      "description": "Telegram bot token, get it through @BotFather."
+      "description": "Telegram bot token, get it by @BotFather."
     },
     "ADMIN_ID": {
       "description": "Telegram user id."

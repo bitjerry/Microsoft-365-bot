@@ -1,0 +1,22 @@
+name: Ms365bot
+on: [push]
+env:
+  FLY_API_TOKEN: ${{secrets.FLY_API_TOKEN}}
+  TOKEN: ${{secrets.BOT_TOKEN}}
+  ADMIN_ID: ${{secrets.ADMIN_ID}}
+jobs:
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy postgres
+          uses: brentd/fly-staging-app@v1
+          with:
+            image: flyio/postgres
+            name: ${{secrets.PG_NAME}}
+      - name: Deploy app
+          uses: superfly/flyctl-actions/setup-flyctl@master
+          run: flyctl deploy --remote-only
+          with:
+            postgres: ${{secrets.PG_NAME}}

@@ -3,7 +3,7 @@ about = "<b>Welcome to Microsoft 365 Global Management Bot!</b>\n<a " \
 cancel = "The current operation has been cancelled."
 expire = "Session has expired!!!"
 error = "Unknown error!!!"
-null = "Null data"
+null = "None data"
 empty = "Message text is empty"
 params_error = "Parameter type or number mismatch"
 """

@@ -7,7 +7,7 @@
 @File: sub
 """
 from ..requests import *
-from ..module import *
+from . import module
 
 
 @module

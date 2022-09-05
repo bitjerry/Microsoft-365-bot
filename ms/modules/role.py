@@ -7,7 +7,7 @@
 @File: role
 """
 from ..requests import *
-from ..module import *
+from . import module
 
 
 @module

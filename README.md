@@ -3,7 +3,7 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 
-Manage the Microsoft 365 Global through the telegram bot
+Manage the Microsoft 365 Global by the telegram bot
 
 Read in other languages: English | [简体中文](/README.zh-CN.md)
 

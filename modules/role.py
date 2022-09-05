@@ -6,7 +6,7 @@
 @Version: v1
 @File: role
 """
-from office import App
+from ms import App
 from res import *
 from core import *
 

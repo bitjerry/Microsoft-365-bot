@@ -15,8 +15,6 @@ from .db import Pgdb
 from . import cryption
 
 
-# dsn = config.DATABASE_URL
-
 class DbServer(Pgdb):
 
     def __init__(self):

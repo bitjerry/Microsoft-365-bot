@@ -6,18 +6,17 @@
 @Version: v1
 @File: core.py
 """
-import sys
 import uuid
 import trace
 import config
 from collections import OrderedDict
 from typing import Callable
+from types import FunctionType
 from telebot import TeleBot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, Update
-from office.requests import MsError
-from office import App
+from ms.requests import MsError
+from ms import App
 from res import Text
-from types import FunctionType
 from db import DbServer
 
 
@@ -312,7 +311,7 @@ class AppPool:
 
     def __init__(self):
         self._apps = []
-        apps_data = DbServer.get_apps_data()
+        apps_data = db_server.get_apps_data()
         for app_data in apps_data:
             self._add_app(app_data)
 
@@ -324,7 +323,7 @@ class AppPool:
         :param app_data: ["name", "client_id", "client_secret", "tenant_id"]
         :return:
         """
-        DbServer.add_app(app_data)
+        db_server.add_app(app_data)
         self._add_app(app_data)
 
     def remove_app(self, app_id: int):
@@ -335,7 +334,7 @@ class AppPool:
         :return:
         """
         app_name = self.get_app_name(app_id)
-        DbServer.delete_app(app_name)
+        db_server.delete_app(app_name)
         self._apps.pop(app_id)
 
     def rename_app(self, app_id: int, new_name: str):
@@ -347,9 +346,9 @@ class AppPool:
         :return:
         """
         app = self._apps[app_id]
-        old_name = app.get_name()
-        DbServer.rename_app(old_name, new_name)
-        app.rename(new_name)
+        old_name = app.name
+        db_server.rename_app(old_name, new_name)
+        app.name = new_name
 
     def edit_app_infos(self, app_id: int, app_info: list):
         """
@@ -358,7 +357,7 @@ class AppPool:
         :return:
         """
         app_name = self.get_app_name(app_id)
-        DbServer.update_app_info(app_name, app_info)
+        db_server.update_app_info(app_name, app_info)
         app_data = [app_name]
         app_data.extend(app_info)
         self._apps[app_id] = App(app_data)
@@ -386,7 +385,7 @@ class AppPool:
         :return:
         """
         app = self._apps[app_id]
-        return app.get_name()
+        return app.name
 
     def get_apps_name(self) -> list:
         """
@@ -394,7 +393,7 @@ class AppPool:
 
         :return:
         """
-        return [app.get_name() for app in self._apps]
+        return [app.name for app in self._apps]
 
 
 def format_html(data: dict | str, prefix: str = ""):
@@ -438,7 +437,7 @@ def app_check(func: Callable):
 
 
 session = SessionUtil()
-DbServer = DbServer()
+db_server = DbServer()
 app_pool = AppPool()
 bot = Bot(config.TOKEN, int(config.ADMIN_ID))
 Btn = KeyboardButton

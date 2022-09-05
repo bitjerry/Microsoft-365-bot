@@ -10,7 +10,7 @@ import secrets
 import re
 from typing import Iterable
 from ..requests import *
-from ..module import *
+from . import module
 
 
 @module
