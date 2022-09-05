@@ -46,23 +46,10 @@ cd Microsoft-365-bot
 ### 部署
 
 ---
-程序支持 fly.io, heroku 和 vps
 
 #### Heroku: 
-大部分操作都可以在它们的页面上直接鼠标点击完成
 
-1. 创建一个应用
-2. 为应用添加一个Postgres附件
-3. 运行 `public.sql`
-4. 添加heroku的环境变量
-5. 部署程序: 
-```commandline
-git init
-heroku git:remote -a xxx.git
-git add .
-git commit -m "Initialize Project"      
-git push heroku master
-```
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 #### Fly.io: 
 必须使用他们的命令行操作:
@@ -71,21 +58,20 @@ git push heroku master
 ```commandline
 flyctl postgres create to create table
 ```
-2. 运行 `public.sql`
-3. 创建一个应用
+2. 创建一个应用
 ```commandline
 flyctl launch
 ```
-4. 将postgres数据库附加到应用中
+3. 将postgres数据库附加到应用中
 ```commandline
 flyctl postgres attach --app <app-name> <postgres-app-name>
 ```
-5. 为应用添加环境变量
+4. 为应用添加环境变量
 ```commandline
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
-7. 部署应用
+5. 部署应用
 ```commandline
 flyctl deploy
 ```
@@ -112,8 +98,9 @@ python3 setup.py
 ---
 1. 程序有两种模式: debug 和 release. 模式切换在 `config.py` 中的 `DEBUG = True`.  
    请注意: 在 release 模式下, db下用于加解密的rsa公私钥会在部署后自动删除
-2. 程序使用 flask 实现了 webhook, 在开发环境下你可以用 polling.
-3. 务必保证在az创建的应用已经给够权限, 哪些api需要哪些权限可以查看微软文档
+2. 某些serverless可能会定期休眠, 在部署前请先生成rsa密钥 (在./db目录下)
+3. 程序使用 flask 实现了 webhook, 在开发环境下你可以用 polling.
+4. 务必保证在az创建的应用已经给够权限, 哪些api需要哪些权限可以查看微软文档
    >https://docs.microsoft.com/en-us/graph/api/
 
 ### 许可证

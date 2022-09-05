@@ -28,7 +28,7 @@ cancel - Cancel the current operation
 ```
 
 
-### Running Environment
+### Python Runtime
 
 ---
 ```commandline
@@ -46,7 +46,6 @@ cd Microsoft-365-bot
 ### Deploy
 
 ---
-The program supports fly.io, heroku and vps
 
 1. Create a PostgresSQL database
 
@@ -55,20 +54,9 @@ The program supports fly.io, heroku and vps
 3. Setting environment variables
 
 #### Heroku: 
-There is a very friendly graphical user interface for the web.
 
-1. Create app
-2. Create a PostgresSQL database for app
-3. Run `public.sql` for postgres
-4. Add environment variables to the app
-5. Deployment Program
-```commandline
-git init
-heroku git:remote -a xxx.git
-git add .
-git commit -m "Initialize Project"      
-git push heroku master
-```
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 #### Fly.io: 
 You need to do this from the command line:
@@ -77,21 +65,20 @@ You need to do this from the command line:
 ```commandline
 flyctl postgres create to create table
 ```
-2. Run `public.sql` for postgres
-3. Create app
+2. Create app
 ```commandline
 flyctl launch
 ```
-4. Attach database to app
+3. Attach database to app
 ```commandline
 flyctl postgres attach --app <app-name> <postgres-app-name>
 ```
-5. Add environment variables to the app
+4. Add environment variables to the app
 ```commandline
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
-7. Deployment Program
+5. Deployment Program
 ```commandline
 flyctl deploy
 ```
@@ -100,8 +87,7 @@ flyctl deploy
 
 1. Prepare your database
 If you don't want to use Postgres, you can try using SQLite3 in `db/db.py`.  
-I have written a database core class in the py file, but I have not tested it.   
-The `public.sql` file for Postgres is not applicable.  
+I have written a database core class in the py file, but I have not tested it.
 By the way, you can write another class to replace them, such as mysql.
 
 2. Add environment variables to the app
@@ -121,8 +107,9 @@ If it is webhook just access /set_webhook, stop using /stop_webhook
 ---
 1. The program has two modes: debug and release. Mode switch in config.py `DEBUG = True`.  
    The public and private keys of RSA will be deleted in release mode, please note that.  
-2. The program uses flask to implement webhook, you can use polling for local development.
-3. It is important to ensure that the applications created in AZ have sufficient permissions, which APIs need which permissions to view Microsoft documents.
+2. Some serverless may sleep regularly. Please enter the RSA key (in the *./db* directory) before deployment
+3. The program uses flask to implement webhook, you can use polling for local development.
+4. It is important to ensure that the applications created in AZ have sufficient permissions, which APIs need which permissions to view Microsoft documents.
    >https://docs.microsoft.com/en-us/graph/api/
    
 ### License

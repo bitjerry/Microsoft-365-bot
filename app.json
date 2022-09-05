@@ -1,0 +1,33 @@
+{
+  "name": "Microsoft 365 bot",
+  "description": "Manage the Microsoft 365 Global through the telegram bot.",
+  "keywords": [
+    "Microsoft",
+    "telegram",
+    "robot",
+    "python",
+    "account"
+  ],
+  "website": "https://github.com/bitjerry/Microsoft-365-bot",
+  "repository": "https://github.com/bitjerry/Microsoft-365-bot",
+  "logo": "https://www.microsoft.com/favicon.ico",
+  "success_url": "/set_webhook",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Telegram bot token, get it through @BotFather."
+    },
+    "ADMIN_ID": {
+      "description": "Telegram user id."
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

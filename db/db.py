@@ -17,7 +17,7 @@ class Pgdb:
     def __init__(self):
         self._dsn = config.DATABASE_URL
 
-    def _execute(self, sql, data):
+    def _execute(self, sql: str, data: list):
         conn = psycopg2.connect(self._dsn)
         cur = conn.cursor()
         # result = True
@@ -32,12 +32,12 @@ class Pgdb:
             conn.close()
         # return result
 
-    def _query(self) -> list:
+    def _query(self, sql: str) -> list:
         conn = psycopg2.connect(self._dsn)
         cur = conn.cursor()
         try:
-            cur.execute("SELECT * FROM apps")
-            return [row for row in cur]
+            cur.execute(sql)
+            return cur.fetchall()
         except Exception as e:
             trace.exception(e)
             return []
@@ -65,11 +65,11 @@ class Pgdb:
 #             conn.close()
 #         # return result
 #
-#     def _query(self) -> list:
+#     def _query(self, sql:str) -> list:
 #         conn = sqlite3.connect(self._dsn)
 #         cur = conn.cursor()
 #         try:
-#             res = cur.execute("SELECT * FROM apps")
+#             res = cur.execute(sql)
 #             return res.fetchall()
 #         except Exception as e:
 #             trace.exception(e)

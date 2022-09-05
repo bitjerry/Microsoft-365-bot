@@ -22,6 +22,18 @@ class DbServer(Pgdb):
     def __init__(self):
         super().__init__()
         self._crypt = cryption.Cryption()
+        self._init_table()
+
+    def _init_table(self):
+        sql = "select exists(select * from information_schema.tables where table_name=`apps`)"
+        result = self._query(sql)[0]
+        if not result or not result[0]:
+            sql = """CREATE TABLE apps (
+                    "name" varchar(255) PRIMARY KEY NOT NULL,
+                    "client_id" varchar(255) NOT NULL,
+                    "client_secret" varchar(255) NOT NULL,
+                    "tenant_id" varchar(255) NOT NULL)"""
+            self._execute(sql, [])
 
     def get_apps_data(self) -> list:
         """
@@ -31,7 +43,7 @@ class DbServer(Pgdb):
         """
         result = []
         try:
-            for row in self._query():
+            for row in self._query("SELECT * FROM apps"):
                 row_decode = [row[0]]
                 for r in row[1:]:
                     row_decode.append(self._crypt.decryption(r))

@@ -7,7 +7,6 @@
 @File: cryption
 """
 import os
-import trace
 
 import rsa
 import base64
