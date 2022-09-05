@@ -1,4 +1,4 @@
-# Microsoft 365 bot
+# <a href=""><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/4.ico" align="left" height="48" width="48" ></a> Microsoft 365 bot
 
 ---
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
@@ -7,10 +7,21 @@
 
 使用其他语言阅读：[English](/README.md) | 简体中文
 
+### 创建一个应用
+
+---
+>https://aad.portal.azure.com
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/1.png" alt="screenshots"></p>
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/2.png" alt="screenshots"></p>
+
+
 ### 创建一个机器人
 
 ---
 @BotFather
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/3.png" alt="screenshots"></p>
 #### 机器人指令
 ```
 start -开始机器人

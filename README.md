@@ -1,4 +1,4 @@
-# Microsoft 365 bot
+# <a href=""><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/4.ico" align="left" height="48" width="48" ></a> Microsoft 365 bot
 
 ---
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
@@ -7,10 +7,20 @@ Manage the Microsoft 365 Global through the telegram bot
 
 Read in other languages: English | [简体中文](/README.zh-CN.md)
 
+### Create app
+
+---
+>https://aad.portal.azure.com
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/1.png" alt="screenshots"></p>
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/2.png" alt="screenshots"></p>
+
 ### Create a Robot
 
 ---
 @BotFather  
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/3.png" alt="screenshots"></p>
  
 #### Commands
 ```
