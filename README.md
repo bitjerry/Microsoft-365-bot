@@ -10,9 +10,10 @@ Read in other languages: English | [简体中文](./README.zh-CN.md)
 ### Create a Robot
 
 ---
-See @BotFather
+@BotFather  
+ 
 #### Commands
-```commandline
+```
 start - Start Robot
 log - Get the log of the robot
 myapp - Specify an app
@@ -31,14 +32,14 @@ cancel - Cancel the current operation
 ### Python Runtime
 
 ---
-```commandline
+```bash
 python 3.10
 ```
 
 ### Install
 
 ---
-```commandline
+```bash
 git clone https://github.com/bitjerry/Microsoft-365-bot.git
 cd Microsoft-365-bot
 ```
@@ -62,24 +63,24 @@ cd Microsoft-365-bot
 You need to do this from the command line:
 
 1. Create a PostgresSQL database for app
-```commandline
+```bash
 flyctl postgres create to create table
 ```
 2. Create app
-```commandline
+```bash
 flyctl launch
 ```
 3. Attach database to app
-```commandline
+```bash
 flyctl postgres attach --app <app-name> <postgres-app-name>
 ```
 4. Add environment variables to the app
-```commandline
+```bash
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
 5. Deployment Program
-```commandline
+```bash
 flyctl deploy
 ```
 
@@ -92,7 +93,7 @@ By the way, you can write another class to replace them, such as mysql.
 
 2. Add environment variables to the app
 3. Deployment Program
-```commandline
+```bash
 pip install -r requirements.txt
 python3 setup.py
 ```

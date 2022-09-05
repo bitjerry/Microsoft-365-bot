@@ -12,7 +12,7 @@
 ---
 @BotFather
 #### 机器人指令
-```commandline
+```
 start -开始机器人
 log -获取机器人运行日志
 myapp -指定一个app
@@ -31,14 +31,14 @@ cancel -取消当前操作
 ### 运行环境
 
 ---
-```commandline
+```bash
 python 3.10
 ```
 
 ### 安装
 
 ---
-```commandline
+```bash
 git clone https://github.com/bitjerry/Microsoft-365-bot.git
 cd Microsoft-365-bot
 ```
@@ -55,24 +55,24 @@ cd Microsoft-365-bot
 必须使用他们的命令行操作:
 
 1. 创建一个Postgres应用
-```commandline
+```bash
 flyctl postgres create to create table
 ```
 2. 创建一个应用
-```commandline
+```bash
 flyctl launch
 ```
 3. 将postgres数据库附加到应用中
-```commandline
+```bash
 flyctl postgres attach --app <app-name> <postgres-app-name>
 ```
 4. 为应用添加环境变量
-```commandline
+```bash
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
 5. 部署应用
-```commandline
+```bash
 flyctl deploy
 ```
 
@@ -83,7 +83,7 @@ flyctl deploy
    坏消息是, 我并没有测试它, 但是仿写一个类应该很简单, 比如你可以写一个支持mysql的核心类
 2. 不要忘记为程序添加环境变量
 3. 部署程序:
-```commandline
+```bash
 pip install -r requirements.txt
 python3 setup.py
 ```
