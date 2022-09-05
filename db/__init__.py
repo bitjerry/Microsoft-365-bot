@@ -43,7 +43,7 @@ class DbServer(Pgdb):
         """
         result = []
         try:
-            for row in self._query("SELECT * FROM apps"):
+            for row in self._query("SELECT * FROM apps", []):
                 row_decode = [row[0]]
                 for r in row[1:]:
                     row_decode.append(self._crypt.decryption(r))

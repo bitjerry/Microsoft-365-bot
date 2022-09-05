@@ -5,7 +5,7 @@
 
 Manage the Microsoft 365 Global through the telegram bot
 
-Read in other languages: English | [简体中文](./README.zh-CN.md)
+Read in other languages: English | [简体中文](/README.zh-CN.md)
 
 ### Create a Robot
 
@@ -108,7 +108,8 @@ If it is webhook just access /set_webhook, stop using /stop_webhook
 ---
 1. The program has two modes: debug and release. Mode switch in config.py `DEBUG = True`.  
    The public and private keys of RSA will be deleted in release mode, please note that.  
-2. Some serverless may sleep regularly. Please enter the RSA key (in the *./db* directory) before deployment
+2. Some serverless may sleep regularly. **Make sure to generate RSA key pairs before deployment!!!** (in the. /db directory) 
+   or keep server awake, otherwise the state will be reset after hibernation and the key pair will be lost.
 3. The program uses flask to implement webhook, you can use polling for local development.
 4. It is important to ensure that the applications created in AZ have sufficient permissions, which APIs need which permissions to view Microsoft documents.
    >https://docs.microsoft.com/en-us/graph/api/
@@ -116,7 +117,7 @@ If it is webhook just access /set_webhook, stop using /stop_webhook
 ### License
 
 ---
-MIT © [bitjerry](./LICENSE)
+MIT © [bitjerry](/LICENSE)
   
 *2022/9/1*
 *Mr.lin*

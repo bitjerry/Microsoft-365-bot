@@ -1,4 +1,5 @@
-about = "Microsoft 365 Global Management Bot!"
+about = "<b>Welcome to Microsoft 365 Global Management Bot!</b>\n<a " \
+        "href='https://github.com/bitjerry/Microsoft-365-bot'>About</a>"
 cancel = "The current operation has been cancelled."
 expire = "Session has expired!!!"
 error = "Unknown error!!!"
