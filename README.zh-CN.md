@@ -15,6 +15,13 @@
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/1.png" alt="screenshots"></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/2.png" alt="screenshots"></p>
 
+### 应用权限
+
+---
+> Organization.Read.All, Organization.ReadWrite.All
+> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory
+> User.Read.All, User.ReadWrite.All
+> Directory.Read.All, Directory.ReadWrite.All
 
 ### 创建一个机器人
 

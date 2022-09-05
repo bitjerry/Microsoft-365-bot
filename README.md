@@ -15,9 +15,18 @@ Read in other languages: English | [简体中文](/README.zh-CN.md)
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/1.png" alt="screenshots"></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/2.png" alt="screenshots"></p>
 
+### Permissions
+
+---
+> Organization.Read.All, Organization.ReadWrite.All
+> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory
+> User.Read.All, User.ReadWrite.All
+> Directory.Read.All, Directory.ReadWrite.All
+
 ### Create a Robot
 
 ---
+
 <a href="https://t.me/BotFather">@BotFather</a> 
 
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/3.png" alt="screenshots"></p>
