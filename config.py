@@ -12,4 +12,4 @@ PORT = os.getenv('PORT', 5000)
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = os.getenv("ADMIN_ID")
 DATABASE_URL = os.getenv('DATABASE_URL')
-DEBUG = True
+DEBUG = False
