@@ -18,10 +18,10 @@ Read in other languages: English | [简体中文](/README.zh-CN.md)
 ### Permissions
 
 ---
-> Organization.Read.All, Organization.ReadWrite.All
-> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory
-> User.Read.All, User.ReadWrite.All
-> Directory.Read.All, Directory.ReadWrite.All
+> Organization.Read.All, Organization.ReadWrite.All  
+> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory  
+> User.Read.All, User.ReadWrite.All  
+> Directory.Read.All, Directory.ReadWrite.All  
 
 ### Create a Robot
 

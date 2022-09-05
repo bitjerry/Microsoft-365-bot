@@ -18,9 +18,9 @@
 ### 应用权限
 
 ---
-> Organization.Read.All, Organization.ReadWrite.All
-> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory
-> User.Read.All, User.ReadWrite.All
+> Organization.Read.All, Organization.ReadWrite.All  
+> RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory  
+> User.Read.All, User.ReadWrite.All  
 > Directory.Read.All, Directory.ReadWrite.All
 
 ### 创建一个机器人
