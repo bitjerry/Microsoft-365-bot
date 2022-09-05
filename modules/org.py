@@ -6,8 +6,6 @@
 @Version: v1
 @File: org
 """
-import telebot.util
-
 from office import App
 from res import *
 from core import *

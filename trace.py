@@ -8,7 +8,6 @@
 """
 import config
 from logging import *
-from types import FunctionType
 from functools import wraps
 
 basicConfig(
