@@ -6,17 +6,17 @@
 @Version: v1
 @File: org
 """
-from ms import App
-from res import *
 from core import *
+from lang import Text
 
 
 @bot.cmd("getorg")
-@app_check
-def get_org_cmd(msg: Message, app: App):
-    org_info = app.Org.get_infos()
-    if org_info:
-        org_info = [format_html(info) for info in org_info]
-        bot.send_msg(msg, "\n============\n".join(org_info))
+def get_org_cmd(msg: Message):
+    app = app_pool.get(session.get("app_id"))
+    if app:
+        if org_info:
+            bot.send_msg(msg, Format(app.Org.get_infos()))
+        else:
+            bot.send_msg(msg, Text.org_no)
     else:
-        bot.send_msg(msg, Text.org_no)
+        bot.send_msg(msg, Text.app_no)

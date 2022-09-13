@@ -4,7 +4,7 @@
 @Time: 2022/8/27 12:43
 @Author: Mr.lin
 @Version: v1
-@File: __init__.py
+@File: db.py
 """
 import glob
 from os.path import dirname, basename, isfile, join
@@ -17,7 +17,7 @@ def module(app_module: type):
     """
     Please refer to Microsoft official documents for request parameters
 
-    :param app_module: corresponds to an ms function module
+    :param app_module: corresponds to an app function module
     :return:
     """
     module_list.append(app_module)
@@ -28,5 +28,5 @@ __all__ = ["module", "module_list"]
 
 modules = glob.glob(join(dirname(__file__), "*.py"))
 for f in modules:
-    if isfile(f) and not f.endswith('__init__.py'):
+    if isfile(f) and not f.endswith('db.py'):
         __all__.append(basename(f)[:-3])

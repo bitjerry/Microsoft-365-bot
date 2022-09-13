@@ -1,62 +1,26 @@
 # !/usr/bin/python3
 # -*-coding: UTF-8-*-
 """
-@Time: 2022/8/27 10:44
+@Time: 2022/9/7 18:45
 @Author: Mr.lin
 @Version: v1
-@File: core.py
+@File: core
 """
 import uuid
-import trace
 import config
+import logging
+import sys
+from app import *
+from .util import *
+from lang import Text
+from functools import wraps
 from collections import OrderedDict
 from typing import Callable
 from types import FunctionType
 from telebot import TeleBot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, Update
-from ms.requests import MsError
-from ms import App
-from res import Text
-from db import DbServer
 
-
-class SessionUtil:
-
-    def __init__(self):
-        self.__app_id: int = 0
-        self.__msgs_tracker: list[int] = []
-        self.__sub_sessions: list[object] = []
-
-    def exist_msg(self, msg: Message):
-        return msg.message_id in self.__msgs_tracker
-
-    def reg_msg(self, msg: Message):
-        self.__msgs_tracker.append(msg.message_id)
-
-    def register(self, sub_session_class: type) -> object:
-        """
-        Register a session class and return an object instance
-
-        :param sub_session_class: sub_session_class: module session
-        :return:
-        """
-        sub_session = sub_session_class()
-        self.__sub_sessions.append(sub_session)
-        return sub_session
-
-    def reset(self):
-        self.__msgs_tracker.clear()
-        for sub_session in self.__sub_sessions:
-            sub_session.__init__()
-
-    @property
-    def app_id(self):
-        return self.__app_id
-
-    @app_id.setter
-    def app_id(self, appid: int):
-        self.reset()
-        self.__app_id = appid
+logger = logging.getLogger(__name__)
 
 
 class BotError(Exception):
@@ -67,13 +31,32 @@ class ModuleError(Exception):
     ...
 
 
+class MessageSession:
+
+    def __init__(self):
+        self.msg_tracker: dict[str, list[int]] = {}
+
+    def exist(self, msg: Message):
+        return any(msg.message_id in msg_list for msg_list in self.msg_tracker.values())
+
+    def reg(self, module_name: str, msg: Message):
+        if module_name in self.msg_tracker.keys():
+            self.msg_tracker[module_name].append(msg.message_id)
+        else:
+            self.msg_tracker[module_name] = [msg.message_id]
+
+    def clear(self, module_name: str):
+        self.msg_tracker.pop(module_name)
+
+
 class Bot(TeleBot):
+    cmd_func_map: dict[str, Callable] = {}
+    callback_func_map: dict[str, dict] = {}
 
     def __init__(self, token: str, admin_id: int):
         super().__init__(token, parse_mode='HTML')
-        self.admin_id = admin_id
-        self.__cmd_map: dict[str, Callable] = {}
-        self.__callback_map: dict[str, dict] = {}
+        self.msg_session: MessageSession = session_util.register(MessageSession)
+        self.admin_id: int = admin_id
         self.__messages_notify()
 
     def __edit_msg(self,
@@ -88,19 +71,26 @@ class Bot(TeleBot):
                    keyboard: InlineKeyboardMarkup = None):
         return self.send_message(msg.chat.id, text, reply_markup=keyboard)
 
+    @staticmethod
+    def __module_name():
+        return sys._getframe(2).f_code.co_filename
+
+    def clear_msg(self):
+        self.msg_session.clear(self.__module_name())
+
     def edit_msg(self,
                  msg: Message,
                  text: str,
                  keyboard: InlineKeyboardMarkup = None):
         msg = self.__edit_msg(msg, text, keyboard)
-        session.reg_msg(msg)
+        self.msg_session.reg(self.__module_name(), msg)
 
     def send_msg(self,
                  msg: Message,
                  text: str,
                  keyboard: InlineKeyboardMarkup = None):
         msg = self.__send_msg(msg, text, keyboard)
-        session.reg_msg(msg)
+        self.msg_session.reg(self.__module_name(), msg)
 
     def raise_error(self,
                     msg: Message,
@@ -109,17 +99,17 @@ class Bot(TeleBot):
             error_type = type(e)
             if error_type == BotError:
                 self.__edit_msg(msg, str(e))
-            elif error_type == ModuleError:
+            elif error_type == ModuleError or error_type == CryptError:
                 self.__send_msg(msg, str(e))
             elif error_type == MsError:
                 self.__send_msg(msg, str(e))
-                trace.exception(e)
+                logger.exception(e)
             else:
                 self.__send_msg(msg, Text.error)
-                trace.exception(e)
+                logger.exception(e)
 
         except Exception as e:
-            trace.exception(e)
+            logger.exception(e)
 
     def overseer(self, func: Callable):
 
@@ -137,9 +127,10 @@ class Bot(TeleBot):
         @self.overseer
         def __callback(msg: CallbackQuery):
             callback_func = callback.func_parse(msg)
-            func_called = self.__callback_map.get(callback_func, None)
+            func_called = self.callback_func_map.get(callback_func, None)
             if func_called and \
-                    (not func_called.get("check_msg", True) or session.exist_msg(msg.message)):
+                    (not func_called.get("check_msg", True) or
+                     self.msg_session.exist(msg.message)):
                 func_called["func"](msg)
             else:
                 raise BotError(Text.expire)
@@ -150,9 +141,8 @@ class Bot(TeleBot):
         @self.overseer
         def __cmd(msg: Message):
             command = msg.text[1:]
-            func = self.__cmd_map.get(command, None)
+            func = self.cmd_func_map.get(command, None)
             if func:
-                session.reset()
                 func(msg)
 
     def cmd(self, command: str | Callable = ""):
@@ -165,7 +155,7 @@ class Bot(TeleBot):
             nonlocal command
             if not command or type(command) == FunctionType:
                 command = func.__name__
-            self.__cmd_map[command] = func
+            self.cmd_func_map[command] = func
             return func
 
         if type(command) == str:
@@ -187,7 +177,7 @@ class Bot(TeleBot):
             nonlocal callback_func
             if not callback_func or type(callback_func) == FunctionType:
                 callback_func = func.__name__
-            self.__callback_map[callback_func] = {
+            self.callback_func_map[callback_func] = {
                 "func": func,
                 "check_msg": check_msg
             }
@@ -197,6 +187,25 @@ class Bot(TeleBot):
             return wrapper
         else:
             return wrapper(callback_func)
+
+    def lock(self, func: Callable):
+        secret = config.OPERATION_SECRET
+
+        @self.overseer
+        def wrapper(msg: Message | CallbackQuery):
+            message = msg if type(msg) == Message else msg.message
+            self.__send_msg(message, Text.key_cmp)
+
+            @self.overseer
+            def cmp(new_msg: Message):
+                if new_msg.text == secret:
+                    func(msg)
+                else:
+                    self.__send_msg(new_msg, Text.key_cmp_error)
+
+            self.register_next_step(message, cmp)
+
+        return wrapper if secret else func
 
     def register_next_step(self, message: Message, func: Callable, *arg, **kwargs):
         """
@@ -212,7 +221,7 @@ class Bot(TeleBot):
         """
 
         def hook_func(msg: Message, *args, **kw):
-            if msg.text == "/cancel":
+            if msg.text[0] == "/":
                 self.clear_step_handler(msg)
                 self.__send_msg(msg, Text.cancel)
             else:
@@ -224,7 +233,7 @@ class Bot(TeleBot):
 
         self.register_next_step_handler(message, hook_func, *arg, **kwargs)
 
-    def get_message_call_back(self, message):
+    def update_message(self, message):
         return self.process_new_updates([Update.de_json(message)])
 
 
@@ -307,150 +316,21 @@ class Callback:
         return self.text_sep.join(args)
 
 
-class AppPool:
-
-    def __init__(self):
-        self._apps = []
-        apps_data = db_server.get_apps_data()
-        for app_data in apps_data:
-            self._add_app(app_data)
-
-    def _add_app(self, app_data: list):
-        self._apps.append(App(app_data))
-
-    def add_app(self, app_data: list):
-        """
-        :param app_data: ["name", "client_id", "client_secret", "tenant_id"]
-        :return:
-        """
-        db_server.add_app(app_data)
-        self._add_app(app_data)
-
-    def remove_app(self, app_id: int):
-        """
-        Remove app
-
-        :param app_id:
-        :return:
-        """
-        app_name = self.get_app_name(app_id)
-        db_server.delete_app(app_name)
-        self._apps.pop(app_id)
-
-    def rename_app(self, app_id: int, new_name: str):
-        """
-        Rename app.
-
-        :param app_id:
-        :param new_name:
-        :return:
-        """
-        app = self._apps[app_id]
-        old_name = app.name
-        db_server.rename_app(old_name, new_name)
-        app.name = new_name
-
-    def edit_app_infos(self, app_id: int, app_info: list):
-        """
-        :param app_id:
-        :param app_info: ["client_id", "client_secret", "tenant_id"]
-        :return:
-        """
-        app_name = self.get_app_name(app_id)
-        db_server.update_app_info(app_name, app_info)
-        app_data = [app_name]
-        app_data.extend(app_info)
-        self._apps[app_id] = App(app_data)
-
-    def get_app_data(self, app_id: int) -> dict:
-        """
-        :param app_id:
-        :return:
-        """
-        app = self._apps[app_id]
-        return app.get_data()
-
-    def get_app(self, app_id: int) -> App:
-        """
-        :param app_id:
-        :return:
-        """
-        return self._apps[app_id]
-
-    def get_app_name(self, app_id: int) -> str:
-        """
-        Gets the name of the specified app
-
-        :param app_id:
-        :return:
-        """
-        app = self._apps[app_id]
-        return app.name
-
-    def get_apps_name(self) -> list:
-        """
-        All apps name
-
-        :return:
-        """
-        return [app.name for app in self._apps]
-
-
-def format_html(data: dict | str, prefix: str = ""):
-    """
-    Convert dictionary to HTML style string
-
-    :param data:
-    :param prefix: Prefix each line (do not use it!!!)
-    :return:
-    """
-    if type(data) is dict:
-        result = '\n'
-        for d in data.items():
-            format_data = format_html(d[1], prefix + ' - ')
-            result += f'{prefix}<b>{d[0]}</b>: {format_data}'
-        return result
-    elif type(data) is list:
-        match len(data):
-            case 0:
-                ...
-            case 1:
-                return format_html(data[0], prefix)
-            case _:
-                format_data = [format_html(d, prefix) for d in data]
-                result = " -  -  -  -  -  - ".join(format_data)
-                return result
-    return f"<i>{data}</i>\n"
-
-
-def app_check(func: Callable):
-    def wrapper(msg: Message | CallbackQuery):
-        app: App = app_pool.get_app(session.app_id)
-        if app:
-            func(msg, app)
-        else:
-            msg = msg if type(msg) == Message else msg.message
-            bot.send_msg(msg, Text.app_no)
-
-    wrapper.__name__ = func.__name__
-    return wrapper
-
-
-session = SessionUtil()
-db_server = DbServer()
+session_util = SessionUtil()
 app_pool = AppPool()
 bot = Bot(config.TOKEN, int(config.ADMIN_ID))
 Btn = KeyboardButton
 Keyboard = InlineKeyboardMarkup
 callback = Callback()
 
-__all__ = ["app_pool",
-           "app_check",
-           "session",
-           "format_html",
-           "bot",
+__all__ = ["bot",
+           "session_util",
+           "app_pool",
            "callback",
+           "App",
            "Btn",
+           "Text",
+           "Format",
            "Keyboard",
            "Message",
            "ModuleError",

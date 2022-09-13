@@ -7,7 +7,6 @@
 @File: requests
 """
 import json
-import trace
 from types import FunctionType
 from http.client import HTTPSConnection
 from urllib.parse import urlencode
@@ -39,7 +38,6 @@ class Response:
             if self.text and "json" in response.getheader("Content-type"):
                 self._json = json.loads(self.text)
         else:
-            # trace.exception(self.text)
             if "json" in response.getheader("Content-Type"):
                 error: dict = json.loads(self.text)
                 raise MsError(error["error"]["message"])

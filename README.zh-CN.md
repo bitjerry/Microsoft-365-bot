@@ -7,6 +7,16 @@
 
 使用其他语言阅读：[English](/README.md) | 简体中文
 
+### 功能
+
+---
+- 通过一个机器人同时, 管理多个Microsoft 365全局账户
+- 对用户增删查改
+- 查看订阅信息, 为用户分配, 撤销订阅
+- 查看组织信息
+- 查看角色信息, 为用户分配, 撤销角色
+- 在Microsoft Graph API中的功能未来会陆续添加
+
 ### 创建一个应用
 
 ---
@@ -79,27 +89,25 @@ cd Microsoft-365-bot
 #### Fly.io: 
 必须使用他们的命令行操作:
 
-1. 创建一个Postgres应用
-```bash
-flyctl postgres create to create table
-```
-2. 创建一个应用
+1. 创建一个应用
 ```bash
 flyctl launch
 ```
-3. 将postgres数据库附加到应用中
-```bash
-flyctl postgres attach --app <app-name> <postgres-app-name>
-```
-4. 为应用添加环境变量
+2. 为应用设置 Postgresql 数据库
+3. 添加环境变量
 ```bash
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
-5. 部署应用
+4. 部署应用
 ```bash
 flyctl deploy
 ```
+
+##### 需要注意的是:
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/5.png" alt="screenshots"></p>
+
 
 #### VPS
 
@@ -116,7 +124,15 @@ python3 setup.py
 ### 运行
 
 ---
-如果是webhook直接访问 /set_webhook, 停用为 /stop_webhook
+机器人有两种运行模式, 如果你不改代码默认是 *webhook*
+
+
+如果是 *webhook* 务必访问 **/set_webhook** 使Telegram服务器绑定你的服务器, 
+停用为 **/stop_webhook**  
+
+
+如果是 *polling* 不需要做任何事
+
 
 ### 注意
 
@@ -127,7 +143,7 @@ python3 setup.py
    或者使其持续处于唤醒状态, 否则休眠后状态会被重置, 密钥对丢失.
 3. 程序使用 flask 实现了 webhook, 在开发环境下你可以用 polling.
 4. 务必保证在az创建的应用已经给够权限, 哪些api需要哪些权限可以查看微软文档
-   >https://docs.microsoft.com/en-us/graph/api/
+   >https://docs.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0
 
 ### 许可证
 

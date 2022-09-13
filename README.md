@@ -7,6 +7,18 @@ Manage the Microsoft 365 Global by the telegram bot
 
 Read in other languages: English | [简体中文](/README.zh-CN.md)
 
+
+### What it can do?
+
+---
+- Manage multiple Microsoft 365 global accounts by the bot at the same time
+- Add, delete, check or modify users
+- View subscription information, assign or revoke licenses for users
+- View organization information
+- View role information, assign or revoke roles for users
+- Functions in Microsoft graph API will be added in the future
+
+
 ### Create app
 
 ---
@@ -75,7 +87,7 @@ cd Microsoft-365-bot
 3. Setting environment variables
    ```
    BOT_TOKEN: Telegram bot token, get it by @BotFather
-   ADMIN_ID: Telegram user ID (123456), usually for yourself
+   ADMIN_ID: Telegram user ID (e.g. 123456), usually for yourself
    ```
 
 #### Heroku: 
@@ -86,27 +98,24 @@ cd Microsoft-365-bot
 #### Fly.io: 
 You need to do this from the command line:
 
-1. Create a PostgresSQL database for app
-```bash
-flyctl postgres create to create table
-```
-2. Create app
+1. Create app
 ```bash
 flyctl launch
 ```
-3. Attach database to app
-```bash
-flyctl postgres attach --app <app-name> <postgres-app-name>
-```
-4. Add environment variables to the app
+2. Set up a Postgresql database
+3. Add environment variables to the app
 ```bash
 flyctl secrets set BOT_TOKEN="xxx"
 flyctl secrets set ADMIN_ID="xxx"
 ```
-5. Deployment Program
+4. Deployment Program
 ```bash
 flyctl deploy
 ```
+
+##### It was worth noticing that:
+
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/5.png" alt="screenshots"></p>
 
 #### VPS
 
@@ -136,7 +145,7 @@ If it is webhook just access /set_webhook, stop using /stop_webhook
    or keep server awake, otherwise the state will be reset after hibernation and the key pair will be lost.
 3. The program uses flask to implement webhook, you can use polling for local development.
 4. It is important to ensure that the applications created in AZ have sufficient permissions, which APIs need which permissions to view Microsoft documents.
-   >https://docs.microsoft.com/en-us/graph/api/
+   >https://docs.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0
    
 ### License
 

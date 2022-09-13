@@ -1,25 +1,22 @@
 # !/usr/bin/python3
 # -*-coding: UTF-8-*-
 """
-@Time: 2022/9/4 8:20
+@Time: 2022/9/9 21:30
 @Author: Mr.lin
 @Version: v1
-@File: trace
+@File: db.py
 """
 import config
-from logging import *
 from functools import wraps
-
-basicConfig(
-    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-    datefmt='%a, %d %b %Y %H:%M:%S',
-    filename='bot.log',
-    filemode='a',
-    encoding='utf-8'
-)
 
 
 def monitor(func):
+    """
+    Monitor input and output of functions.
+
+    :param func:
+    :return:
+    """
     @wraps(func)
     def decorator(*args, **kwargs):
         result = func(*args, **kwargs)
@@ -55,11 +52,3 @@ def release(func):
         return func(*args, **kwargs) if not config.DEBUG else None
 
     return decorator
-
-
-logger = getLogger()
-if config.DEBUG:
-    logger.setLevel(DEBUG)
-else:
-    logger.setLevel(INFO)
-

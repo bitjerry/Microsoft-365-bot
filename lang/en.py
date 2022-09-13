@@ -5,9 +5,29 @@ expire = "Session has expired!!!"
 error = "Unknown error!!!"
 null = "None data"
 empty = "Message text is empty"
+init_f = "Error initializing bot!!!"
 params_error = "Parameter type or number mismatch"
 """
-modules area
+bot area
+"""
+
+db_data_found = "We find existing apps, decrypt them with a key, or discard them and generate a new key"
+db_decrypt_f = "decryption failure"
+db_encrypt_f = "encryption failure"
+db_unlock_s = "Unlock succeeded"
+db_unlock_f = "Unlock failed"
+"""
+database area
+"""
+
+key_op = ["Unlock", "New"]
+key_empty = "No token is found!"
+key_gen = "Generate a new token to protect my apps"
+key_input = "Enter the decryption token of the current apps"
+key_cmp = "Enter the token to continue"
+key_cmp_error = "Incorrect token"
+"""
+key area
 """
 
 app_choose = "Choose an app from the list below:"
@@ -17,6 +37,7 @@ app_add_s = "Successfully added global management app!"
 app_add_f = "Failed to add global management app"
 app_del_s = "Delete success"
 app_del_f = "Delete fail"
+app_clear_s = "All apps have been removed!"
 app_rename = "Send me a new name"
 app_rename_s = "Rename success"
 app_edit = "Send me app auth info. Please use this format:\n\nclient_id\nclient_secret\ntenant_id\n"

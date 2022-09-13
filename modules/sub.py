@@ -6,40 +6,49 @@
 @Version: v1
 @File: sub
 """
-from ms import App
-from res import *
 from core import *
+from lang import Text
+from .res import get_pretty_sku_name
 
 
 @bot.cmd("getsub")
-@app_check
-def my_sub_cmd(msg: Message, app: App):
-    keyboard = gen_subs_keyboard(app, info_sub)
-    if keyboard:
-        bot.send_msg(msg, Text.sub_choose, keyboard)
+def my_sub_cmd(msg: Message):
+    app = app_pool.get(session.get("app_id"))
+    if app:
+        keyboard = gen_subs_keyboard(app, info_sub)
+        if keyboard:
+            bot.send_msg(msg, Text.sub_choose, keyboard)
+        else:
+            bot.send_msg(msg, Text.sub_no)
     else:
-        bot.send_msg(msg, Text.sub_no)
+        bot.send_msg(msg, Text.app_no)
 
 
 @bot.callback
-@app_check
-def info_sub(msg: CallbackQuery, app: App):
-    sub_id = callback.text_parse(msg)
-    sub_data = app.Sub.get_info(sub_id)
-    buttons = [
-        [Btn(text="Back To Subs list",
-             callback_func=operation_sub)]]
-    bot.edit_msg(msg.message,
-                 format_html(sub_data),
-                 Keyboard(buttons))
+def info_sub(msg: CallbackQuery):
+    app = app_pool.get(session.get("app_id"))
+    if app:
+        sub_id = callback.text_parse(msg)
+        sub_data = app.Sub.get_info(sub_id)
+        buttons = [
+            [Btn(text="Back To Subs list",
+                 callback_func=operation_sub)]]
+        bot.edit_msg(msg.message,
+                     Format(sub_data),
+                     Keyboard(buttons))
+    else:
+        bot.edit_msg(msg.message, Text.app_no)
 
 
 @bot.callback
-@app_check
-def operation_sub(msg: CallbackQuery, app: App):
-    bot.edit_msg(msg.message,
-                 Text.sub_choose,
-                 gen_subs_keyboard(app, info_sub))
+def operation_sub(msg: CallbackQuery):
+    app = app_pool.get(session.get("app_id"))
+    if app:
+        bot.edit_msg(msg.message,
+                     Text.sub_choose,
+                     gen_subs_keyboard(app, info_sub))
+    else:
+        bot.edit_msg(msg.message, Text.app_no)
 
 
 def gen_subs_keyboard(app: App, callback_func):
