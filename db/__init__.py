@@ -4,7 +4,7 @@
 @Time: 2022/9/12 23:31
 @Author: Mr.lin
 @Version: v1
-@File: __init__.py
+@File: __init__
 """
 
 import logging
@@ -15,6 +15,10 @@ from contextlib import contextmanager
 from sqlalchemy import Column, String, create_engine, inspect
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
+
+__all__ = ["check_empty", "try_decode", "add_app", "add_apps", "get_apps",
+           "drop_apps", "get_app_ids", "get_app", "delete_app", "clear_apps",
+           "rename_app", "update_app_info", "crypt", "CryptError"]
 
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
@@ -51,7 +55,6 @@ class Apps(Base):
         self.tenant_id = crypt.encrypt(tenant_id)
 
     def parse(self):
-        print(self.client_id)
         return [self.id,
                 self.name,
                 crypt.decrypt(self.client_id),
@@ -72,133 +75,120 @@ def get_session() -> Session:
         session.close()
 
 
-class DbServer:
-    page_size = 10
+page_size = 10
 
-    def __init__(self):
-        inspector = inspect(engine)
-        if not inspector.has_table(table_name):
-            Base.metadata.create_all(engine, checkfirst=False)
+inspector = inspect(engine)
+if not inspector.has_table(table_name):
+    Base.metadata.create_all(engine, checkfirst=False)
 
-    @staticmethod
-    def check_empty():
-        """
-        Check if data already exists
 
-        :return:
-        """
+def check_empty():
+    """
+    Check if data already exists
+
+    :return:
+    """
+    with get_session() as s:
+        return s.query(Apps).first()
+
+
+def try_decode():
+    with get_session() as s:
+        return s.query(Apps).first().parse()
+
+
+def drop_apps():
+    Apps.__table__.drop(engine)
+
+
+def get_apps():
+    with get_session() as s:
+        return [app.parse() for app in s.query(Apps).all()]
+
+
+def clear_apps():
+    """
+
+    :return:
+    """
+    with get_session() as s:
+        s.execute(f"TRUNCATE {table_name}")
+
+
+def get_app_ids(page_index: int):
+    """
+
+    :param page_index:
+    :return:
+    """
+    with get_session() as s:
+        return s.query(Apps.id) \
+            .limit(page_size) \
+            .offset(page_index * page_size) \
+            .all()
+
+
+def get_app(app_id: str):
+    """
+
+    :param app_id:
+    :return:
+    """
+    with get_session() as s:
+        return s.query(Apps).filter_by(id=app_id).first().parse()
+
+
+def add_app(*app_data):
+    """
+
+    :param app_data:
+    :return:
+    """
+    with get_session() as s:
+        s.add(Apps(*app_data))
+
+
+def add_apps(apps: list):
+    """
+    app: "id", "name", "client_id", "client_secret", "tenant_id"
+
+    :param apps:
+    :return:
+    """
+    if apps:
         with get_session() as s:
-            return s.query(Apps).first()
-
-    @staticmethod
-    def try_decode():
-        with get_session() as s:
-            return s.query(Apps).first().parse()
-
-    @staticmethod
-    def drop_apps():
-        """
-
-        :return:
-        """
-        Apps.__table__.drop(engine)
-
-    @staticmethod
-    def get_apps():
-        """
-
-        :return:
-        """
-        with get_session() as s:
-            return [app.parse() for app in s.query(Apps).all()]
-
-    @staticmethod
-    def clear_apps():
-        """
-
-        :return:
-        """
-        with get_session() as s:
-            s.execute(f"TRUNCATE {table_name}")
-
-    @staticmethod
-    def get_app_ids(page_index: int):
-        """
-
-        :param page_index:
-        :return:
-        """
-        with get_session() as s:
-            return s.query(Apps.id) \
-                .limit(DbServer.page_size) \
-                .offset(page_index * DbServer.page_size) \
-                .all()
-
-    @staticmethod
-    def get_app(app_id: str):
-        """
-
-        :param app_id:
-        :return:
-        """
-        with get_session() as s:
-            return s.query(Apps).filter_by(id=app_id).first().parse()
-
-    @staticmethod
-    def add_app(*app_data):
-        """
-
-        :param app_data:
-        :return:
-        """
-        with get_session() as s:
-            s.add(Apps(*app_data))
-
-    @staticmethod
-    def add_apps(apps: list):
-        """
-        app: "id", "name", "client_id", "client_secret", "tenant_id"
-
-        :param apps:
-        :return:
-        """
-        if apps:
-            with get_session() as s:
-                s.execute(
-                    Apps.__table__.insert(),
-                    [{"id": app[0],
-                      "name": app[1],
-                      "client_id": crypt.encrypt(app[2]),
-                      "client_secret": crypt.encrypt(app[3]),
-                      "tenant_id": crypt.encrypt(app[4])}
-                     for app in apps])
-
-    @staticmethod
-    def rename_app(app_id: str, new_name: str):
-        """
-        :param app_id:
-        :param new_name:
-        :return:
-        """
-        with get_session() as s:
-            s.query(Apps).filter_by(id=app_id).update({"name": new_name}).first()
-
-    @staticmethod
-    def update_app_info(app_id: str, infos: list):
-        """
-        :param app_id:
-        :param infos: new infos[client_id, client_secret, tenant_id]
-        :return:
-        """
-        with get_session() as s:
-            s.query(Apps).filter_by(id=app_id).update(
-                {info_name[i]: crypt.encrypt(infos[i])
-                 for i in range(len(infos))}).first()
-
-    @staticmethod
-    def delete_app(app_id: str):
-        with get_session() as s:
-            s.query(Apps).filter_by(id=app_id).delete().first()
+            s.execute(
+                Apps.__table__.insert(),
+                [{"id": app[0],
+                  "name": app[1],
+                  "client_id": crypt.encrypt(app[2]),
+                  "client_secret": crypt.encrypt(app[3]),
+                  "tenant_id": crypt.encrypt(app[4])}
+                 for app in apps])
 
 
-__all__ = ["DbServer", "crypt", "CryptError"]
+def rename_app(app_id: str, new_name: str):
+    """
+    :param app_id:
+    :param new_name:
+    :return:
+    """
+    with get_session() as s:
+        s.query(Apps).filter_by(id=app_id).update({"name": new_name}).first()
+
+
+def update_app_info(app_id: str, infos: list):
+    """
+    :param app_id:
+    :param infos: new infos[client_id, client_secret, tenant_id]
+    :return:
+    """
+    with get_session() as s:
+        s.query(Apps).filter_by(id=app_id).update(
+            {info_name[i]: crypt.encrypt(infos[i])
+             for i in range(len(infos))}).first()
+
+
+def delete_app(app_id: str):
+    with get_session() as s:
+        s.query(Apps).filter_by(id=app_id).delete().first()

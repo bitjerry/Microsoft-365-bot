@@ -4,7 +4,7 @@
 @Time: 2022/9/9 0:01
 @Author: Mr.lin
 @Version: v1
-@File: db.py
+@File: __init__
 """
 import config
 import sys

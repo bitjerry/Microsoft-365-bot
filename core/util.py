@@ -6,12 +6,13 @@
 @Version: v1
 @File: util
 """
+__all__ = ["Format", "SessionUtil"]
 
 
 class SessionUtil:
 
     def __init__(self):
-        self.__sub_sessions: dict[str, object] = {}
+        self.__sub_sessions: dict = {}
 
     def get(self, var: str):
         """
@@ -64,11 +65,11 @@ class Format:
             type_value = type(v)
             prefix = self.dict_prefix * level + f"<b>{k}</b>:"
             if type_value == dict:
-                result += f"{prefix}{key}\n{self.__dict(v, level + 1)}"
+                result += f"{prefix}\n{self.__dict(v, level + 1)}"
             elif type_value == list:
-                result += f"{prefix}{key}\n{self.__list(va, level + 1)}"
+                result += f"{prefix}\n{self.__list(v, level + 1)}"
             else:
-                result += f"{prefix}{key}{self.__var(v)}"
+                result += f"{prefix}{self.__var(v)}"
         return result
 
     def __list(self, data: list, level: int):
@@ -97,6 +98,3 @@ class Format:
             return self.__list(self.data, 1)
         else:
             return self.__var(self.data)
-
-
-__all__ = ["Format", "SessionUtil"]

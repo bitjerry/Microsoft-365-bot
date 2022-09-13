@@ -20,8 +20,14 @@ db_unlock_f = "Unlock failed"
 database area
 """
 
-key_op = ["Unlock", "New"]
-key_empty = "No token is found!"
+key = "<pre>{}</pre>\n<i>The token is only shown once and will be hidden automatically soon."\
+      " Please save them in time.</i>"
+key_hidden = "<pre>{}</pre>"
+key_ops = ["Unlock", "New"]
+key_op = "New"
+key_decrypt = "<b>Detect existing databases, enter a key to unlock them, \n"\
+              " or generate a new key (which will empty them) !!!</b>"
+key_empty = "No token is found!!!"
 key_gen = "Generate a new token to protect my apps"
 key_input = "Enter the decryption token of the current apps"
 key_cmp = "Enter the token to continue"

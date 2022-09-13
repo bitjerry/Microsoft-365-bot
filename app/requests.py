@@ -12,6 +12,8 @@ from http.client import HTTPSConnection
 from urllib.parse import urlencode
 from time import time
 
+__all__ = ["MsError", "Response", "Requests"]
+
 
 class MsError(Exception):
     ...
@@ -94,12 +96,10 @@ class Requests:
 
     def _ms_requests(self, method: str, url: str, **kwargs):
         url = f"/v1.0/{url.strip('/')}"
-        params = kwargs.get("params", None)
-        if params:
+        if params := kwargs.get("params", None):
             url = f"{url}?{urlencode(params)}"
 
-        data = kwargs.get("data", None)
-        if data:
+        if data := kwargs.get("data", None):
             body = urlencode(data)
         else:
             json_data = kwargs.get("json", None)
@@ -135,6 +135,3 @@ class Requests:
     @ms_requests
     def patch(self, url: str, headers: dict, data: dict, json) -> Response:
         ...
-
-
-__all__ = ["MsError", "Response", "Requests"]

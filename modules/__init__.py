@@ -4,7 +4,7 @@
 @Time: 2022/8/27 10:47
 @Author: Mr.lin
 @Version: v1
-@File: db.py
+@File: __init__
 """
 import glob
 from core import *

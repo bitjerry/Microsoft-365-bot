@@ -10,15 +10,20 @@ import uuid
 import config
 import logging
 import sys
+import time
+import threading
 from app import *
 from .util import *
 from lang import Text
-from functools import wraps
 from collections import OrderedDict
 from typing import Callable
 from types import FunctionType
 from telebot import TeleBot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, Update
+
+__all__ = ["bot", "session_util", "app_pool", "callback", "App",
+           "Btn", "Text", "Format", "Keyboard", "Message",
+           "ModuleError", "CallbackQuery"]
 
 logger = logging.getLogger(__name__)
 
@@ -50,14 +55,45 @@ class MessageSession:
 
 
 class Bot(TeleBot):
-    cmd_func_map: dict[str, Callable] = {}
-    callback_func_map: dict[str, dict] = {}
+
+    class FuncChecked:
+
+        def __init__(self, check: bool, func: Callable):
+            self.check: bool = check
+            self.func: Callable = func
+
+    class Event:
+
+        def __init__(self, time_out: float, func: Callable, *args, **kwargs):
+            self.time_out: float = time_out
+            self.func: Callable = func
+            self.func_args = (args, kwargs)
 
     def __init__(self, token: str, admin_id: int):
         super().__init__(token, parse_mode='HTML')
+        self.cmd_func_map: dict[str, Callable] = {}
+        self.callback_func_map: dict[str, Bot.FuncChecked] = {}
+        self.events: dict[str, Bot.Event] = {}
         self.msg_session: MessageSession = session_util.register(MessageSession)
         self.admin_id: int = admin_id
         self.__messages_notify()
+        self.__threading = threading.Thread(target=self.__daemon)
+        self.__threading.daemon = True
+        self.__threading.start()
+
+    def __daemon(self):
+        while True:
+            time.sleep(1)
+            try:
+                for event_name in list(self.events.keys()):
+                    event = self.events[event_name]
+                    event.time_out -= 1
+                    if not event.time_out:
+                        args = event.func_args
+                        event.func(*args[0], **args[1])
+                        self.events.pop(event_name)
+            except Exception as e:
+                logger.exception(e)
 
     def __edit_msg(self,
                    msg: Message,
@@ -84,6 +120,7 @@ class Bot(TeleBot):
                  keyboard: InlineKeyboardMarkup = None):
         msg = self.__edit_msg(msg, text, keyboard)
         self.msg_session.reg(self.__module_name(), msg)
+        return msg
 
     def send_msg(self,
                  msg: Message,
@@ -91,6 +128,7 @@ class Bot(TeleBot):
                  keyboard: InlineKeyboardMarkup = None):
         msg = self.__send_msg(msg, text, keyboard)
         self.msg_session.reg(self.__module_name(), msg)
+        return msg
 
     def raise_error(self,
                     msg: Message,
@@ -102,11 +140,11 @@ class Bot(TeleBot):
             elif error_type == ModuleError or error_type == CryptError:
                 self.__send_msg(msg, str(e))
             elif error_type == MsError:
+                logger.exception(e)
                 self.__send_msg(msg, str(e))
-                logger.exception(e)
             else:
-                self.__send_msg(msg, Text.error)
                 logger.exception(e)
+                self.__send_msg(msg, Text.error)
 
         except Exception as e:
             logger.exception(e)
@@ -129,9 +167,9 @@ class Bot(TeleBot):
             callback_func = callback.func_parse(msg)
             func_called = self.callback_func_map.get(callback_func, None)
             if func_called and \
-                    (not func_called.get("check_msg", True) or
+                    (not func_called.check or
                      self.msg_session.exist(msg.message)):
-                func_called["func"](msg)
+                func_called.func(msg)
             else:
                 raise BotError(Text.expire)
 
@@ -140,8 +178,7 @@ class Bot(TeleBot):
             content_types=["text"])
         @self.overseer
         def __cmd(msg: Message):
-            command = msg.text[1:]
-            func = self.cmd_func_map.get(command, None)
+            func = self.cmd_func_map.get(msg.text[1:], None)
             if func:
                 func(msg)
 
@@ -166,10 +203,10 @@ class Bot(TeleBot):
 
     def callback(self,
                  callback_func: str | Callable = "",
-                 check_msg: bool = True):
+                 check: bool = True):
         """
         :param callback_func: callback function or function identification
-        :param check_msg: check if the message for the current operation exists
+        :param check: check if the message for the current operation exists
         :return:
         """
 
@@ -177,10 +214,7 @@ class Bot(TeleBot):
             nonlocal callback_func
             if not callback_func or type(callback_func) == FunctionType:
                 callback_func = func.__name__
-            self.callback_func_map[callback_func] = {
-                "func": func,
-                "check_msg": check_msg
-            }
+            self.callback_func_map[callback_func] = Bot.FuncChecked(check, func)
             return func
 
         if type(callback_func) == str:
@@ -206,6 +240,22 @@ class Bot(TeleBot):
             self.register_next_step(message, cmp)
 
         return wrapper if secret else func
+
+    def delay(self, time_out: float):
+        """
+
+        :param time_out:
+        :return:
+        """
+
+        def decorator(func):
+
+            def wrapper(*args, **kwargs):
+                self.events["delay"] = Bot.Event(time_out, func, *args, **kwargs)
+
+            return wrapper
+
+        return decorator
 
     def register_next_step(self, message: Message, func: Callable, *arg, **kwargs):
         """
@@ -322,16 +372,3 @@ bot = Bot(config.TOKEN, int(config.ADMIN_ID))
 Btn = KeyboardButton
 Keyboard = InlineKeyboardMarkup
 callback = Callback()
-
-__all__ = ["bot",
-           "session_util",
-           "app_pool",
-           "callback",
-           "App",
-           "Btn",
-           "Text",
-           "Format",
-           "Keyboard",
-           "Message",
-           "ModuleError",
-           "CallbackQuery"]
