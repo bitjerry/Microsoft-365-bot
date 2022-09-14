@@ -22,10 +22,7 @@ class SessionUtil:
         :return:
         """
         sub_session = self.__sub_sessions.get(var, None)
-        if sub_session:
-            return getattr(sub_session, var)
-        else:
-            return None
+        return getattr(sub_session, var) if sub_session else None
 
     def register(self, sub_session_class: type):
         """
@@ -83,12 +80,12 @@ class Format:
                 res = self.__list(value, level + 1)
             else:
                 res = self.__var(value)
-            result += f"{prefix}{res.replace(self.dict_prefix * level, '', 1)}"
+            result += prefix+res.replace(self.dict_prefix * level, '', 1)
         return result
 
     @staticmethod
     def __var(data):
-        return f"<i>{data}</i>\n"
+        return f" <i>{data}</i>\n"
 
     def __str__(self):
         type_value = type(self.data)

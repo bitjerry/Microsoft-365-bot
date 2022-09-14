@@ -16,17 +16,6 @@ class Role:
     def __init__(self, requests: Requests):
         self._req = requests
 
-    # def get_template(self):
-    #     """
-    #     Get the role template and format it as role.json
-    #
-    #     :return:{"displayName": "id", ...}
-    #     """
-    #     params = {"$select": "displayName, id, description"}
-    #     res = self._req.get(url="/directoryRoleTemplates", params=params)
-    #     data = res.json()["value"]
-    #     print({ro.pop("displayName"): ro["id"] for ro in data})
-
     def get_all(self) -> dict[dict]:
         """
         List the directory roles that are activated in the tenant.
@@ -35,7 +24,7 @@ class Role:
         """
         params = {"$select": "displayName, id"}
         res = self._req.get(url="/directoryRoles", params=params)
-        return res.json()["value"]
+        return res.json["value"]
 
     def get_info(self, role_id: str) -> dict:
         """
@@ -47,7 +36,7 @@ class Role:
         url = f"/directoryRoles/roleTemplateId={role_id}"
         params = {"$select": "displayName, description"}
         res = self._req.get(url=url, params=params)
-        info = res.json()
+        info = res.json
         info.pop("@odata.context")
         return info
 
@@ -61,7 +50,7 @@ class Role:
         url = f"/directoryRoles/roleTemplateId={role_id}/members/microsoft.graph.user"
         params = {"$select": "userPrincipalName"}
         res = self._req.get(url=url, params=params)
-        return res.json()['value']
+        return res.json['value']
 
     def add_member(self, role_id: str, user_id: str):
         """

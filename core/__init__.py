@@ -21,18 +21,13 @@ from types import FunctionType
 from telebot import TeleBot
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, Update
 
-__all__ = ["bot", "session_util", "app_pool", "callback", "App",
-           "Btn", "Text", "Format", "Keyboard", "Message",
-           "ModuleError", "CallbackQuery"]
+__all__ = ["bot", "session_util", "app_pool", "callback", "App", "Btn",
+           "Text", "Format", "Keyboard", "Message", "CallbackQuery"]
 
 logger = logging.getLogger(__name__)
 
 
 class BotError(Exception):
-    ...
-
-
-class ModuleError(Exception):
     ...
 
 
@@ -55,7 +50,6 @@ class MessageSession:
 
 
 class Bot(TeleBot):
-
     class FuncChecked:
 
         def __init__(self, check: bool, func: Callable):
@@ -77,23 +71,26 @@ class Bot(TeleBot):
         self.msg_session: MessageSession = session_util.register(MessageSession)
         self.admin_id: int = admin_id
         self.__messages_notify()
-        self.__threading = threading.Thread(target=self.__daemon)
-        self.__threading.daemon = True
-        self.__threading.start()
+        self.__daemon()
 
     def __daemon(self):
-        while True:
-            time.sleep(1)
-            try:
-                for event_name in list(self.events.keys()):
-                    event = self.events[event_name]
-                    event.time_out -= 1
-                    if not event.time_out:
-                        args = event.func_args
-                        event.func(*args[0], **args[1])
-                        self.events.pop(event_name)
-            except Exception as e:
-                logger.exception(e)
+        def __exec():
+            while True:
+                time.sleep(1)
+                try:
+                    for event_name in list(self.events.keys()):
+                        event = self.events[event_name]
+                        event.time_out -= 1
+                        if not event.time_out:
+                            args = event.func_args
+                            event.func(*args[0], **args[1])
+                            self.events.pop(event_name)
+                except Exception as e:
+                    logger.exception(e)
+
+        __threading = threading.Thread(target=__exec)
+        __threading.daemon = True
+        __threading.start()
 
     def __edit_msg(self,
                    msg: Message,
@@ -137,7 +134,7 @@ class Bot(TeleBot):
             error_type = type(e)
             if error_type == BotError:
                 self.__edit_msg(msg, str(e))
-            elif error_type == ModuleError or error_type == CryptError:
+            elif error_type == CryptError:
                 self.__send_msg(msg, str(e))
             elif error_type == MsError:
                 logger.exception(e)
@@ -225,7 +222,6 @@ class Bot(TeleBot):
     def lock(self, func: Callable):
         secret = config.OPERATION_SECRET
 
-        @self.overseer
         def wrapper(msg: Message | CallbackQuery):
             message = msg if type(msg) == Message else msg.message
             self.__send_msg(message, Text.key_cmp)
@@ -249,7 +245,6 @@ class Bot(TeleBot):
         """
 
         def decorator(func):
-
             def wrapper(*args, **kwargs):
                 self.events["delay"] = Bot.Event(time_out, func, *args, **kwargs)
 
@@ -269,17 +264,13 @@ class Bot(TeleBot):
         :param func:
         :return:
         """
-
+        @self.overseer
         def hook_func(msg: Message, *args, **kw):
             if msg.text[0] == "/":
                 self.clear_step_handler(msg)
                 self.__send_msg(msg, Text.cancel)
             else:
-                try:
-                    func(msg, *args, **kw)
-                except Exception as e:
-                    self.raise_error(msg, e)
-                    self.register_next_step(msg, func, *args, **kw)
+                func(msg, *args, **kw)
 
         self.register_next_step_handler(message, hook_func, *arg, **kwargs)
 

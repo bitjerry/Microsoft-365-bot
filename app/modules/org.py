@@ -44,7 +44,7 @@ class Org:
         }
 
         res = self._req.get(url="/organization", params=params)
-        return res.json()['value']
+        return res.json['value']
 
     def update_infos(self, org_id):
         ...

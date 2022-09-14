@@ -34,13 +34,13 @@ def hidden_token(msg: Message):
 @bot.callback
 def new_token(msg: CallbackQuery):
     if crypt.key:
-        apps = get_apps()
+        apps = get_all_apps()
         token = crypt.new()
-        clear_apps()
+        clear_all_apps()
         add_apps(apps)
     else:
         token = crypt.new()
-        clear_apps()
+        clear_all_apps()
     new_msg = bot.edit_msg(msg.message, Text.key.format(token), keyboard_op)
     hidden_token(new_msg)
 

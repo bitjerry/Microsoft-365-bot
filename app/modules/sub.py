@@ -24,7 +24,7 @@ class Sub:
         """
         params = {"$select": "skuPartNumber, skuId, id"}
         res = self._req.get(url="/subscribedSkus", params=params)
-        return res.json()["value"]
+        return res.json["value"]
 
     def get_info(self, sku_id: str) -> dict:
         """
@@ -36,6 +36,6 @@ class Sub:
             "$select": "capabilityStatus,consumedUnits,prepaidUnits,skuId,skuPartNumber"
         }
         res = self._req.get(url=f"/subscribedSkus/{sku_id}", params=params)
-        data: dict = res.json()
+        data = res.json
         data.pop('@odata.context')
         return data

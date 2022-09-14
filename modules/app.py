@@ -46,16 +46,12 @@ def add_app_cmd(msg: Message):
 
 @bot.cmd("clearapp")
 def clear_app_cmd(msg: Message):
-    app_pool.remove()
+    app_pool.clear()
     bot.send_msg(msg, Text.app_clear_s)
 
 
 @bot.callback(check=False)
 def info_app(msg: CallbackQuery):
-    session.app_id = callback.text_parse(msg)
-    print(session.app_id)
-    app_data = app_pool.get_data(session.app_id)
-    print(app_data)
     keyboard_data = ["Delete App",
                      "Edit Auth Info",
                      "Rename App",
@@ -66,9 +62,10 @@ def info_app(msg: CallbackQuery):
              callback_func=operation_app)
          for data in keyboard_data[i:i + 2]]
         for i in range(0, len(keyboard_data), 2)]
-    print(Format(app_data))
+    session.app_id = callback.text_parse(msg)
+    app = app_pool.get(session.app_id)
     bot.edit_msg(msg.message,
-                 Format(app_data),
+                 Format(app.get_data()),
                  Keyboard(buttons))
 
 
@@ -94,17 +91,18 @@ def delete_app(msg: Message):
 
 
 def rename_app(msg: Message):
-    app_pool.rename(session.app_id, msg.text)
+    app_pool.get(session.app_id).name = msg.text
     bot.send_msg(msg, Text.app_rename_s)
 
 
 def edit_app(msg: Message):
     app_data = msg.text.split('\n')
     if len(app_data) == 3:
-        app_pool.edit_info(session.app_id, app_data)
+        app_pool.get(session.app_id).edit_info(*app_data)
         bot.send_msg(msg, Text.app_edit_s)
     else:
-        raise ModuleError(Text.app_info_f)
+        bot.send_msg(msg, Text.app_info_f)
+        bot.register_next_step(msg, edit_app)
 
 
 def back_to_apps(msg: Message):
@@ -119,13 +117,12 @@ def add_app(msg: Message):
         app_pool.add(*app_data)
         bot.send_msg(msg, Text.app_add_s)
     else:
-        raise ModuleError(Text.app_info_f)
+        bot.send_msg(msg, Text.app_info_f)
+        bot.register_next_step(msg, add_app)
 
 
 def gen_apps_keyboard(callback_func):
-    app_data = app_pool.get_names()
-    print(app_data)
-    if app_data:
+    if app_data := app_pool.get_names():
         buttons = [
             [Btn(text=app_name,
                  callback_data=app_id,

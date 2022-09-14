@@ -41,7 +41,7 @@ class User:
                 params["$search"] = f"\"userPrincipalName:{search}\""
                 headers = {"ConsistencyLevel": "eventual"}
         res = self._req.get(url=url, params=params, headers=headers)
-        data: dict = res.json()
+        data: dict = res.json
         next_link: str = data.get("@odata.nextLink", None)
         next_link = re.sub(".*?/users", "/users", next_link) if next_link else None
         return data["value"], next_link
@@ -95,7 +95,7 @@ class User:
                              "createdDateTime, "
                              "lastPasswordChangeDateTime"}
         res = self._req.get(url=f"/users/{user_id}", params=params)
-        data: dict = res.json()
+        data: dict = res.json
         data.pop('@odata.context')
         return data
 
@@ -130,7 +130,7 @@ class User:
         url = f"/users/{user_id}/licenseDetails"
         params = {"$select": "skuPartNumber, skuId"}
         res = self._req.get(url=url, params=params)
-        return res.json()["value"]
+        return res.json["value"]
 
     def add_license(self, user_id: str, sku_ids: Iterable):
         """
@@ -167,7 +167,7 @@ class User:
         url = f"/users/{user_id}/memberOf/microsoft.graph.directoryRole"
         params = {"$select": "displayName, roleTemplateId"}
         res = self._req.get(url=url, params=params)
-        return res.json()['value']
+        return res.json['value']
 
     def create(self,
                username: str,
@@ -200,4 +200,4 @@ class User:
                    "username": username,
                    "display_name": display_name,
                    "password": password
-               }, res.json()["id"]
+               }, res.json["id"]
