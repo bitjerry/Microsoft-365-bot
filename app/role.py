@@ -6,15 +6,13 @@
 @Version: v1
 @File: role
 """
-from ..requests import *
-from . import module
+from util.request import *
 
 
-@module
-class Role:
+class Role(MsRequest):
 
-    def __init__(self, requests: Requests):
-        self._req = requests
+    def __init__(self, request: Requests):
+        super().__init__(request)
 
     def get_all(self) -> dict[dict]:
         """
@@ -23,7 +21,7 @@ class Role:
         :return: {"displayName": "id", ...}
         """
         params = {"$select": "displayName, id"}
-        res = self._req.get(url="/directoryRoles", params=params)
+        res = self.req.get(url="/directoryRoles", params=params)
         return res.json["value"]
 
     def get_info(self, role_id: str) -> dict:
@@ -35,7 +33,7 @@ class Role:
         """
         url = f"/directoryRoles/roleTemplateId={role_id}"
         params = {"$select": "displayName, description"}
-        res = self._req.get(url=url, params=params)
+        res = self.req.get(url=url, params=params)
         info = res.json
         info.pop("@odata.context")
         return info
@@ -49,7 +47,7 @@ class Role:
         """
         url = f"/directoryRoles/roleTemplateId={role_id}/members/microsoft.graph.user"
         params = {"$select": "userPrincipalName"}
-        res = self._req.get(url=url, params=params)
+        res = self.req.get(url=url, params=params)
         return res.json['value']
 
     def add_member(self, role_id: str, user_id: str):
@@ -64,7 +62,7 @@ class Role:
         json = {
             "@odata.id": f"https://graph.microsoft.com/v1.0/directoryObjects/{user_id}"
         }
-        self._req.post(url=url, json=json)
+        self.req.post(url=url, json=json)
 
     def del_member(self, role_id, user_id):
         """
@@ -75,4 +73,4 @@ class Role:
         :return:
         """
         url = f"/directoryRoles/roleTemplateId={role_id}/members/{user_id}/$ref"
-        self._req.delete(url)
+        self.req.delete(url)

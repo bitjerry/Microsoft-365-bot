@@ -5,10 +5,10 @@
 @Author: Mr.lin
 @File: setup
 """
-import os
 import config
 import logging
 import traceback
+from urllib.parse import urlparse
 from flask import Flask, request
 
 __author__ = "Mr.lin"
@@ -26,8 +26,8 @@ logging.basicConfig(
 
 # noinspection PyBroadException
 try:
-    from core import *
-    from modules import *
+    from core import bot
+    from service import *
 
 except Exception:
     traceback.print_exc()
@@ -35,23 +35,12 @@ except Exception:
 app = Flask(__name__)
 
 
-@app.get(config.WEBHOOK_URL)
+@app.get(config.WELCOME_URL)
 def start():
     return '!', 200
 
 
-@app.get(config.SET_WEBHOOK_URL)
-def set_webhook():
-    url = "https://" + request.host + config.WEBHOOK_URL
-    return str(bot.set_webhook(url)), 200
-
-
-@app.get(config.STOP_WEBHOOK_URL)
-def stop_webhook():
-    return str(bot.remove_webhook()), 200
-
-
-@app.post(config.WEBHOOK_URL)
+@app.post(urlparse(config.WEBHOOK_URL).path + '/')
 def get_message():
     request_body_dict = request.get_data().decode('utf-8')
     bot.update_message(request_body_dict)
@@ -59,5 +48,12 @@ def get_message():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(config.PORT))
-    # bot.polling()
+    # noinspection PyBroadException
+    try:
+        if config.WEBHOOK_URL.startswith("https://"):
+            bot.set_webhook(config.WEBHOOK_URL)
+            app.run(host="0.0.0.0", port=int(config.PORT))
+        else:
+            bot.polling(non_stop=True)
+    except Exception:
+        traceback.print_exc()

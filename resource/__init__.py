@@ -9,6 +9,12 @@
 import csv
 from os.path import dirname, join
 
+import config
+from .i18n import en_us
+from importlib import import_module
+
+__all__ = ["Text", "get_pretty_sku_name"]
+
 pkg_path = dirname(__file__)
 
 name_for_sub = {}
@@ -30,3 +36,9 @@ def get_pretty_sku_name(name: str) -> str:
     :return:
     """
     return name_for_sub.get(name, name)
+
+
+Text = en_us
+
+if config.lang:
+    Text = import_module(f".{config.lang}", f"{__package__}.i18n")

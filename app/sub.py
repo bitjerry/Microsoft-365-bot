@@ -6,15 +6,13 @@
 @Version: v1
 @File: sub
 """
-from ..requests import *
-from . import module
+from util.request import *
 
 
-@module
-class Sub:
+class Sub(MsRequest):
 
-    def __init__(self, requests: Requests):
-        self._req = requests
+    def __init__(self, request: Requests):
+        super().__init__(request)
 
     def get_all(self) -> list:
         """
@@ -23,7 +21,7 @@ class Sub:
         :return:
         """
         params = {"$select": "skuPartNumber, skuId, id"}
-        res = self._req.get(url="/subscribedSkus", params=params)
+        res = self.req.get(url="/subscribedSkus", params=params)
         return res.json["value"]
 
     def get_info(self, sku_id: str) -> dict:
@@ -35,7 +33,7 @@ class Sub:
         params = {
             "$select": "capabilityStatus,consumedUnits,prepaidUnits,skuId,skuPartNumber"
         }
-        res = self._req.get(url=f"/subscribedSkus/{sku_id}", params=params)
+        res = self.req.get(url=f"/subscribedSkus/{sku_id}", params=params)
         data = res.json
         data.pop('@odata.context')
         return data

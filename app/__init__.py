@@ -8,19 +8,25 @@ Office 365 Global App
 @Version: v1
 @File: __init__
 """
-import uuid
-from lang import Text
+import os
+from importlib import import_module
+from resource import Text
 from db import *
-from .requests import *
-from .modules import *
-from collections import OrderedDict
+from util.request import *
+from collections import defaultdict, OrderedDict
 
-__all__ = ["App", "AppPool", "MsError", "CryptError"]
+__all__ = ["App", "app_pool"]
+
+for f in os.listdir(os.path.dirname(__file__)):
+    if f.endswith('.py') and f != 'db.py':
+        import_module(f".{f[:-3]}", __package__)
+
+module_class_list = MsRequest.__subclasses__()
 
 
 class App:
 
-    def __init__(self, app_id: str, name: str, *app_info: str):
+    def __init__(self, app_id: int, name: str, *app_info: str):
         self._id = app_id
         self._name = name
         self._auth_info = app_info
@@ -28,17 +34,8 @@ class App:
 
     def __bind_modules(self):
         req = Requests(*self._auth_info)
-        for app_module in module_list:
+        for app_module in module_class_list:
             setattr(self, app_module.__name__, app_module(req))
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, new_name: str):
-        rename_app(self._id, new_name)
-        self._name = new_name
 
     def get_data(self) -> dict:
         return {
@@ -47,6 +44,10 @@ class App:
             "client_secret": crypt.hidden(self._auth_info[1]),
             "tenant_id": crypt.hidden(self._auth_info[2])
         }
+
+    def rename(self, new_name: str):
+        rename_app(self._id, new_name)
+        self._name = new_name
 
     def edit_info(self, *app_info: str):
         """
@@ -59,34 +60,44 @@ class App:
 
 
 class AppPool:
+    """
+    LFU Cache
+    """
 
     def __init__(self):
-        self.maxsize = 128
-        self.__apps = OrderedDict()
+        self._capacity = 128
+        self.least_freq = 1
+        self._id_freq_map = {}
+        self._freq_apps_map = defaultdict(OrderedDict)
 
-    def add(self, *app_data: str):
-        """
-        :param app_data: ["name", "client_id", "client_secret", "tenant_id"]
-        :return:
-        """
-        app_id = str(uuid.uuid4())
-        add_app(app_id, *app_data)
-        self.__apps[app_id] = App(app_id, *app_data)
-        self.__apps.move_to_end(app_id)
-        if len(self.__apps) > self.maxsize:
-            self.__apps.popitem(last=False)
+    def __get(self, app_id: int) -> App:
+        freq = self._id_freq_map[app_id]
+        self._id_freq_map[app_id] += 1
+        app = self._freq_apps_map[freq].pop(app_id)
+        self._freq_apps_map[freq + 1][app_id] = app
+        if not len(self._freq_apps_map[freq]):
+            self.least_freq += 1
+        return app
 
-    def get(self, app_id: str) -> App:
+    def __put(self, app_id: int, app: App):
+        self._id_freq_map[app_id] = 1
+        self._freq_apps_map[1][app_id] = app
+        if len(self._id_freq_map) > self._capacity:
+            k, _ = self._freq_apps_map[self.least_freq].popitem(last=False)
+            self._id_freq_map.pop(k)
+        self.least_freq = 1
+
+    def get(self, app_id: int) -> App:
         """
         :param app_id:
         :return:
         """
-        if app_id in self.__apps:
-            self.__apps.move_to_end(app_id)
-            return self.__apps[app_id]
-        else:
-            self.add(*get_app(app_id))
-            return self.__apps[app_id]
+        if app_id in self._id_freq_map:
+            return self.__get(app_id)
+        elif app := get_app(app_id):
+            app_obj = App(*app)
+            self.__put(app_id, app_obj)
+            return app_obj
 
     def clear(self):
         """
@@ -95,9 +106,9 @@ class AppPool:
         :return:
         """
         clear_all_apps()
-        self.__apps.clear()
+        self.__init__()
 
-    def remove(self, app_id: str):
+    def remove(self, app_id: int):
         """
         Remove app
 
@@ -105,13 +116,12 @@ class AppPool:
         :return:
         """
         delete_app(app_id)
-        self.__apps.pop(app_id)
+        if app_id not in self._id_freq_map:
+            return None
+        freq = self._id_freq_map.pop(app_id)
+        self._freq_apps_map[freq].pop(app_id)
+        if not len(self._freq_apps_map[freq]) and freq == self.least_freq:
+            self.least_freq += 1
 
-    def get_names(self) -> list:
-        """
-        Cache page [(app_id, app_name)...]
 
-        :return:
-        """
-        return [(app_id[0], self.get(app_id[0]).name)
-                for app_id in get_app_ids(0)]
+app_pool = AppPool()

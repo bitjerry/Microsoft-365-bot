@@ -6,15 +6,13 @@
 @Version: v1
 @File: org
 """
-from ..requests import *
-from . import module
+from util.request import *
 
 
-@module
-class Org:
+class Org(MsRequest):
 
-    def __init__(self, requests: Requests):
-        self._req = requests
+    def __init__(self, request: Requests):
+        super().__init__(request)
 
     def get_infos(self):
         """
@@ -40,10 +38,9 @@ class Org:
                        "technicalNotificationMails,"
                        "tenantType,"
                        "directorySizeQuota,"
-                       "verifiedDomains"
-        }
+                       "verifiedDomains"}
 
-        res = self._req.get(url="/organization", params=params)
+        res = self.req.get(url="/organization", params=params)
         return res.json['value']
 
     def update_infos(self, org_id):

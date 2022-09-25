@@ -6,10 +6,10 @@
 @Version: v1
 @File: cryption
 """
-import os
-from lang import Text
+from resource import Text
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.asymmetric import rsa
+
+__all__ = ["crypt", "CryptError"]
 
 
 class CryptError(Exception):
@@ -39,8 +39,11 @@ class Cryption:
         :param key:
         :return:
         """
-        self.__key = self.hidden(key)
-        self.Fernet = Fernet(key)
+        try:
+            self.__key = self.hidden(key)
+            self.Fernet = Fernet(key)
+        except Exception as e:
+            raise CryptError(e)
 
     def new(self):
         key = str(Fernet.generate_key(), 'utf-8')
@@ -58,10 +61,7 @@ class Cryption:
         :return:
         """
         if self.Fernet:
-            try:
-                return str(self.Fernet.encrypt(bytes(data, 'utf-8')), "utf-8")
-            except Exception:
-                raise
+            return str(self.Fernet.encrypt(bytes(data, 'utf-8')), "utf-8")
         else:
             raise CryptError(Text.key_empty)
 
@@ -72,14 +72,9 @@ class Cryption:
         :return:
         """
         if self.Fernet:
-            try:
-                return str(self.Fernet.decrypt(data), "utf-8")
-            except Exception:
-                raise
+            return str(self.Fernet.decrypt(data), "utf-8")
         else:
             raise CryptError(Text.key_empty)
 
 
 crypt = Cryption()
-
-__all__ = ["crypt", "CryptError"]

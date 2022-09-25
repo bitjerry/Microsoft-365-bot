@@ -9,14 +9,24 @@
 import json
 import logging
 import config
+import http
 from types import FunctionType
 from http.client import HTTPSConnection
 from urllib.parse import urlencode
 from time import time
 
-__all__ = ["MsError", "Response", "Requests"]
+__all__ = ["MsError", "Response", "Requests", "MsRequest"]
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("http.client")
+
+
+def print_to_log(*args, **kwargs):
+    logger.debug(" ".join(args))
+
+
+# monkey-patch a `print` global into the http.client module; all calls to
+# print() in that module will then use our print_to_log implementation
+http.client.print = print_to_log
 
 
 class MsError(Exception):
@@ -72,17 +82,16 @@ class Requests:
     """
 
     def __init__(self, client_id: str, client_secret: str, tenant_id: str):
-        print(client_id, client_secret, tenant_id)
         self.__client_id: str = client_id
         self.__client_secret: str = client_secret
         self.__tenant_id: str = tenant_id
         self.__access_token: str = ""
-        self.__token_expires: int = 0
+        self.__token_expires: float = 0.0
 
     @staticmethod
     def _requests(method: str, host: str, url: str, body, headers: dict):
         conn = HTTPSConnection(host)
-        conn.set_debuglevel(2 if config.DEBUG else 0)
+        conn.set_debuglevel(5 if config.DEBUG else 0)
         conn.request(method, url, body, headers)
         return Response(conn)
 
@@ -97,14 +106,15 @@ class Requests:
             'client_secret': self.__client_secret,
             'scope': 'https://graph.microsoft.com/.default'
         }
-        res: Response = self._requests(method="POST",
-                                       host="login.microsoftonline.com",
-                                       url=f'/{self.__tenant_id}/oauth2/v2.0/token',
-                                       body=urlencode(data),
-                                       headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        res: Response = self._requests(
+            method="POST",
+            host="login.microsoftonline.com",
+            url=f'/{self.__tenant_id}/oauth2/v2.0/token',
+            body=urlencode(data),
+            headers={'Content-Type': 'application/x-www-form-urlencoded'})
         json_data = res.json
         self.__access_token = json_data['access_token']
-        self.__token_expires = int(json_data['expires_in']) + int(time())
+        self.__token_expires = time() + json_data['expires_in']
 
     @staticmethod
     def _ms_requests(func: FunctionType):
@@ -144,3 +154,9 @@ class Requests:
     @_ms_requests
     def patch(self, url: str, headers: dict, data: dict, json) -> Response:
         ...
+
+
+class MsRequest:
+
+    def __init__(self, request: Requests):
+        self.req = request

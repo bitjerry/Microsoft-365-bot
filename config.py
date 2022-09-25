@@ -8,15 +8,15 @@
 """
 import os
 
-PORT = os.getenv("PORT", 5000)
 TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = os.getenv("ADMIN_ID")
-WELCOME_URL = os.getenv("WELCOME_URL", "/")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL", "/")
-SET_WEBHOOK_URL = os.getenv("SET_WEBHOOK_URL", "/set_webhook")
-STOP_WEBHOOK_URL = os.getenv("STOP_WEBHOOK_URL", "/stop_webhook")
+ADMIN_ID = int(os.getenv("ADMIN_ID"))
+
+PORT = os.getenv("PORT", 5000)
 DATABASE_URL = os.getenv("DATABASE_URL")
 OPERATION_SECRET = os.getenv("OPERATION_SECRET")
-lang = "en"
-SET_KEY = False
-DEBUG = True
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+WELCOME_URL = os.getenv("WELCOME_URL", "/")
+lang = os.getenv("LANG", "en_us")
+EXPIRE_LOGS = int(os.getenv("EXPIRE_LOGS", 30*24*3600))
+DEBUG = bool(os.getenv("DEBUG", True))
+
