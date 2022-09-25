@@ -1,0 +1,4 @@
+cryptography==38.0.0
+Flask==2.2.1
+pyTelegramBotAPI==4.7.0
+SQLAlchemy==1.4.41

@@ -18,5 +18,5 @@ WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 WELCOME_URL = os.getenv("WELCOME_URL", "/")
 lang = os.getenv("LANG", "en_us")
 EXPIRE_LOGS = int(os.getenv("EXPIRE_LOGS", 30*24*3600))
-DEBUG = bool(os.getenv("DEBUG", True))
+DEBUG = bool(os.getenv("DEBUG", False))
 
