@@ -32,6 +32,8 @@ session_util.register(session)
 control_keyboard_verify = gen_control_keyboard(Text.domain_control_verify)
 control_keyboard_verify_back = gen_control_keyboard(Text.domain_control_verify_back)
 control_keyboard_back = gen_control_keyboard(Text.domain_control_back)
+control_keyboard = gen_control_keyboard(Text.domain_control)
+control_keyboard_back_only = gen_control_keyboard(Text.domain_control_back_only)
 
 
 @bot.cmd("listdomain")
@@ -78,16 +80,18 @@ def control(msg: CallbackQuery, app: App):
 
 
 def add(msg: Message, app: App):
-    app.Domain.add(msg.text)
-    dns_text = app.Domain.get_dns(msg.text)
-    bot.send_msg(msg,
-                 Text.domain_dns + str(Format(dns_text)),
-                 control_keyboard_verify)
+    domain_info = app.Domain.add(msg.text)
+    session.domain_name = msg.text
+    if domain_info["isVerified"]:
+        bot.send_msg(msg, Format(domain_info), control_keyboard)
+    else:
+        domain_info = app.Domain.get_dns(msg.text)
+        bot.send_msg(msg, Text.domain_dns + str(Format(domain_info)), control_keyboard_verify)
 
 
 def delete(msg: Message, app: App):
     app.Domain.delete(session.domain_name)
-    bot.edit_msg(msg, Text.domain_del_s)
+    bot.edit_msg(msg, Text.domain_del_s, control_keyboard_back_only)
 
 
 def verify(msg: Message, app: App):

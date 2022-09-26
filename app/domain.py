@@ -24,7 +24,9 @@ class Domain(MsRequest):
         return res.json
 
     def add(self, domain_name: str):
-        self.req.post(url="domains", json={"id": domain_name})
+        res = self.req.post(url="domains", json={"id": domain_name})
+        res.json.pop("@odata.context")
+        return res.json
 
     def get_dns(self, domain_name: str):
         res = self.req.get(url=f"domains/{domain_name}/verificationDnsRecords")

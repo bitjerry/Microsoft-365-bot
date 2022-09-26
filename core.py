@@ -187,7 +187,6 @@ class Bot(TeleBot):
                 return func(*args, **kwargs)
             except Exception as e:
                 if e.__class__.__name__ in ["CryptError", "MsError"]:
-                    logger.exception(e)
                     self.send_message(self.ADMIN_ID, str(e))
                 else:
                     logger.exception(e)
@@ -200,7 +199,6 @@ class Bot(TeleBot):
         :param command: default use function name as bot command. no `/`
         :return:
         """
-
         def wrapper(func: Callable):
             nonlocal command
             if not command or type(command) == FunctionType:

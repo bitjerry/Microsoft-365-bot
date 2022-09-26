@@ -15,6 +15,7 @@
 - 查看订阅信息, 为用户分配, 撤销订阅
 - 查看组织信息
 - 查看角色信息, 为用户分配, 撤销角色
+- 对域名的添加与删除
 - 在Microsoft Graph API中的功能未来会陆续添加
 
 ### 创建一个应用
@@ -32,6 +33,7 @@
 > RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory  
 > User.Read.All, User.ReadWrite.All  
 > Directory.Read.All, Directory.ReadWrite.All
+> Directory.AccessAsUser.All
 
 ### 创建一个机器人
 

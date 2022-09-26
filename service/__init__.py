@@ -22,7 +22,7 @@ def start(msg: Message):
 
 @bot.cmd("log")
 def get_log(msg: Message):
-    with open("bot.log", "r+") as doc:
+    with open("bot.log", "r+", encoding='utf-8') as doc:
         if doc.read(1):
             bot.send_doc(msg, doc)
             doc.seek(0)
@@ -32,7 +32,7 @@ def get_log(msg: Message):
 @bot.on_startup
 @task.delay(config.EXPIRE_LOGS, True)
 def auto_send_log():
-    with open("bot.log", "r+") as doc:
+    with open("bot.log", "r+", encoding='utf-8') as doc:
         if doc.read(1):
             bot.send_document(bot.ADMIN_ID, doc)
             doc.seek(0)

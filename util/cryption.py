@@ -43,6 +43,7 @@ class Cryption:
             self.__key = self.hidden(key)
             self.Fernet = Fernet(key)
         except Exception as e:
+            self.__init__()
             raise CryptError(e)
 
     def new(self):
@@ -61,7 +62,11 @@ class Cryption:
         :return:
         """
         if self.Fernet:
-            return str(self.Fernet.encrypt(bytes(data, 'utf-8')), "utf-8")
+            try:
+                return str(self.Fernet.encrypt(bytes(data, 'utf-8')), "utf-8")
+            except Exception:
+                self.__init__()
+                raise CryptError(Text.key_unlock_f)
         else:
             raise CryptError(Text.key_empty)
 
@@ -72,7 +77,11 @@ class Cryption:
         :return:
         """
         if self.Fernet:
-            return str(self.Fernet.decrypt(data), "utf-8")
+            try:
+                return str(self.Fernet.decrypt(data), "utf-8")
+            except Exception:
+                self.__init__()
+                raise CryptError(Text.key_unlock_f)
         else:
             raise CryptError(Text.key_empty)
 

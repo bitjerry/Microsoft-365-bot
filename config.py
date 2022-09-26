@@ -13,7 +13,7 @@ ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
 PORT = os.getenv("PORT", 5000)
 DATABASE_URL = os.getenv("DATABASE_URL")
-OPERATION_SECRET = os.getenv("OPERATION_SECRET")
+OPERATION_SECRET = os.getenv("SECRET")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 WELCOME_URL = os.getenv("WELCOME_URL", "/")
 lang = os.getenv("LANG", "en_us")

@@ -38,7 +38,7 @@ session = UserSession()
 session_util.register(session)
 control_keyboard_back = gen_control_keyboard(Text.user_control_back)
 control_keyboard = gen_control_keyboard(Text.user_control)
-
+control_keyboard_back_only = gen_control_keyboard(Text.user_control_back_only)
 
 @bot.cmd("getuser")
 @app_injector
@@ -204,9 +204,9 @@ def control(msg: CallbackQuery, app: App):
 
 
 @lock
-def delete(app: App):
+def delete(msg: Message, app: App):
     app.User.delete(session.user_id)
-    bot.send_msg(msg, Text.user_delete_s)
+    bot.edit_msg(msg, Text.user_delete_s, control_keyboard_back_only)
 
 
 @lock

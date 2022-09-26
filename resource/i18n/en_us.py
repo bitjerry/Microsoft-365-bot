@@ -33,7 +33,7 @@ key area
 
 secret_hidden = "<pre>***</pre>"
 secret_cmp = "Enter the secret to continue"
-secret_cmp_error = "Incorrect secret"
+secret_cmp_error = "Incorrect secret. Please enter the new secret to continue"
 """
 secret area
 """
@@ -90,6 +90,7 @@ user_control_back = [(0, "Assign license"),
                      (7, "Chang name suffix"),
                      (8, "Refresh"),
                      (9, "Back to user list")]
+user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
 user_select = "Select a user from the list below:"
 user_by_name = "Select a user by username: xxx@contoso.com"
@@ -137,6 +138,8 @@ org area
 domain_control_verify_back = [(0, "Verify"), (1, "Delete"), (2, "Back")]
 domain_control_verify = domain_control_verify_back[:-1]
 domain_control_back = domain_control_verify_back[1:]
+domain_control = domain_control_verify_back[1:2]
+domain_control_back_only = domain_control_verify_back[-1:]
 domain_select = "Select a domain from the list below:"
 domain_add = "Send me a domain name"
 domain_add_f = "Domain added failure"

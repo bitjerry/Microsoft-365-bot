@@ -33,7 +33,7 @@ key area
 
 secret_hidden = "<pre>***</pre>"
 secret_cmp = "请输入密码以继续"
-secret_cmp_error = "密码不正确"
+secret_cmp_error = "密码不正确, 请重新输入新密码以继续"
 """
 secret area
 """
@@ -90,6 +90,7 @@ user_control_back = [(0, "分配许可"),
                      (7, "修改用户名后缀"),
                      (8, "刷新"),
                      (9, "返回用户列表")]
+user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
 user_select = "从以下列表中选择一个用户:"
 user_by_name = "选择一个用户通过指定用户名: xxx@contoso.com"
@@ -109,7 +110,7 @@ user_name_suffix_update_s = "用户名后缀更新成功"
 user_rename = "发给我一个新名字"
 user_rename_s = "重命名成功"
 user_reset_password = "你的新密码是: <pre>{}</pre>\n" \
-                      "请及时保存它, 处于安全起见最好在用后删除它"
+                      "请及时保存它, 出于安全起见最好在用后删除它"
 user_lic_no = "用户没有许可证"
 user_lic_asg_btn = "分配许可"
 user_lic_asg = "你已经选择了:\n\n<i>{}</i>\n按下 <b>分配许可</b> 以为用户分配它们"
@@ -137,19 +138,21 @@ org area
 domain_control_verify_back = [(0, "验证"), (1, "删除"), (2, "返回")]
 domain_control_verify = domain_control_verify_back[:-1]
 domain_control_back = domain_control_verify_back[1:]
+domain_control = domain_control_verify_back[1:2]
+domain_control_back_only = domain_control_verify_back[-1:]
 domain_select = "从以下列表中选择一个域名:"
 domain_add = "发给我一个域名"
 domain_add_f = "域名添加失败"
-domain_del_s = "域名添加成功"
-domain_dns = "在你的域名托管商中添加一个DNS记录以验证域名:\n"
+domain_del_s = "域名删除成功"
+domain_dns = "请在你的域名托管商中添加一个DNS记录以验证域名:\n"
 domain_verify_f = "域名验证失败!!!\n你确定DNS记录已被正确添加吗?"
 domain_no = "没有域名"
 """
 domain area
 """
 
-match_error = "没有情况被匹配"
-module_name_error = "模块不在service目录下!!!"
+match_error = "No case matched"
+module_name_error = "Module is not in service directory!!!"
 """
 other
 """
