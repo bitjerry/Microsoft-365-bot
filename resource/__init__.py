@@ -10,7 +10,7 @@ import csv
 from os.path import dirname, join
 
 import config
-from .i18n import en_us
+from .i18n import zh_cn
 from importlib import import_module
 
 __all__ = ["Text", "get_pretty_sku_name", "res_path"]
@@ -38,7 +38,7 @@ def get_pretty_sku_name(name: str) -> str:
     return name_for_sub.get(name, name)
 
 
-Text = en_us
+Text = zh_cn
 
 if config.lang:
     Text = import_module(f".{config.lang}", f"{__package__}.i18n")
