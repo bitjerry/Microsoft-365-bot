@@ -20,20 +20,6 @@ Read in other languages: English | [简体中文](/README.md)
 
 
 ---
-[Catalog]
-
-- Preparation
-  - [Create app](#🚀create-app)
-  - [Create a Robot](#🤖create-a-robot)
-- [Config](#⚙️config)
-- [Runtime](#🥼runtime)
-- [Deploy](#🔨deploy)
-- [Run](#🏃run)
-- [Changelog](#📝changelog)
-- [Security](./docs/security.md)
-- [Document](./docs/dev.md)
-- [FAQ](./docs/error.md)
-
 ### 🚀Create app
 
 ---
@@ -132,6 +118,12 @@ The bot has two modes of work and does not require manual activation.
 
 - 2.1
   - Fix bug
+
+### 📖More
+
+- [Security](./docs/security.md)
+- [Document](./docs/dev.md)
+- [FAQ](./docs/error.md)
 
 ### ⚖️License
 
