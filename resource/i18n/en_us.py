@@ -1,11 +1,12 @@
-about = "<b>Welcome to Microsoft 365 Global Management Bot!</b>\n<a " \
-        "href='https://github.com/bitjerry/Microsoft-365-bot'>About</a>"
+about = "<b>Welcome to Microsoft 365 Global Management Bot!</b>\n" \
+        "<a href='https://github.com/bitjerry/Microsoft-365-bot'>Version 2.0</a>"
 cancel = "The current operation has been cancelled."
 expire = "Session has expired!!!"
 error = "Unknown error!!!"
 null = "None data"
 empty = "Message text is empty"
 init_f = "Error initializing bot!!!"
+not_modified = "message is not modified"
 params_error = "Parameter type or number mismatch"
 page_up_btn = "⏫ page up"
 page_down_btn = "page down ⏬"
@@ -46,7 +47,7 @@ app_select = "Select an app from the list below:"
 app_empty = "Oops!!! No app"
 app_no = "Oops!!! No app is specified"
 app_id_no = "App id that does not exist"
-app_add_more = "Send me the <i>template.json</i> to add more apps"
+app_add_more = "Download this template, and after filling out all apps information, return it to add apps in bulk."
 app_add = "Send me app data. Please use this format:\n\napp_name\nclient_id\nclient_secret\ntenant_id\n"
 app_add_s = "Successfully added global management app!"
 app_add_f = "Failed to add global management app!"
@@ -84,21 +85,24 @@ user_control_back = [(0, "Assign license"),
                      (1, "My license"),
                      (2, "Assign role"),
                      (3, "My role"),
-                     (4, "Delete"),
-                     (5, "Rename"),
+                     (4, "Rename"),
+                     (5, "Modify display name"),
                      (6, "Reset password"),
                      (7, "Chang name suffix"),
-                     (8, "Refresh"),
-                     (9, "Back to user list")]
+                     (8, "Delete"),
+                     (9, "Disable"),
+                     (10, "Refresh"),
+                     (11, "Back to user list")]
 user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
+user_back_btn = "Back to user"
 user_select = "Select a user from the list below:"
 user_by_name = "Select a user by username: xxx@contoso.com"
 user_search = "Search for users by username (fuzzy matching)"
 user_no = "Oops!!! No user"
 user_name = "The current username is: <b>{}</b>\n"
 user_data = "Send me user info. Please use this format:\n\nusername\npassword (Optional)"
-user_create_s = "<b>Successfully create user\nThis information is displayed only once!!!\n"\
+user_create_s = "<b>Successfully create user\nThis information is displayed only once!!!\n" \
                 "For password security, it is better to delete it after use</b>" \
                 "\n===========\n\nUsername: {}\nPassword: {}"
 user_delete_s = "User deleted successfully"
@@ -121,11 +125,14 @@ user_lic_del_btn = "Delete License"
 user_lic_del = "You've already selected:\n\n<i>{}</i>\nPress <b>Delete License</b> to delete them from the user"
 user_lic_del_sel = "Select the license you want to delete, click Select, and click Unselect again"
 user_role_asg = "Select one role to assign, only one at a time. Do not assign again"
-user_role_del = "Select one role to delete, only one at a time. Do not assign again"
+user_role_del = "Select one role to delete, only one at a time. Do not delete again"
 user_role_del_s = "Role deleted successfully"
 user_role_asg_s = "Role assigned successfully"
 user_role_no = "Oops!!! No role for user"
-user_back_btn = "Back to user"
+user_disable = "User has been disabled"
+user_modify_display_name = user_rename
+user_modify_display_name_s = "Successfully modified the display name"
+
 """
 user area
 """

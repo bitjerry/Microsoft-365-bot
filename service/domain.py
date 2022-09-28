@@ -112,7 +112,8 @@ def back(msg: Message, app: App):
 def gen_domain_keyboard(app: App):
     if not (domain_list := app.Domain.list()):
         return None
-    return Keyboard([[Btn(text=domain["id"],
-                          callback_data=domain["id"],
-                          callback_func=show_info)]
-                     for domain in domain_list])
+    keyboard = [[Btn(text=domain["id"],
+                     callback_data=domain["id"],
+                     callback_func=show_info)]
+                for domain in domain_list]
+    return Keyboard(keyboard)

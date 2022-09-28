@@ -4,7 +4,7 @@
 @Time: 2022/8/3 23:36
 @Author: Mr.lin
 @Version: v1
-@File: db.py
+@File: resource
 """
 import csv
 from os.path import dirname, join
@@ -13,13 +13,13 @@ import config
 from .i18n import en_us
 from importlib import import_module
 
-__all__ = ["Text", "get_pretty_sku_name"]
+__all__ = ["Text", "get_pretty_sku_name", "res_path"]
 
-pkg_path = dirname(__file__)
+res_path = dirname(__file__)
 
 name_for_sub = {}
 
-with open(join(pkg_path, "name_for_sub.csv"), 'r', encoding='ISO-8859-1') as f:
+with open(join(res_path, "name_for_sub.csv"), 'r', encoding='ISO-8859-1') as f:
     """
     read sub name to dict{sub_name: pretty_name}\n
     """

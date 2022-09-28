@@ -42,8 +42,9 @@ def control(msg: CallbackQuery, app: App):
 def gen_subs_keyboard(app: App):
     if not (sub_list := app.Sub.get_all()):
         return None
-    return Keyboard(
-        [[Btn(text=get_pretty_sku_name(sub["skuPartNumber"]),
-              callback_data=sub["id"],
-              callback_func=show_info)]
-         for sub in sub_list])
+    buttons = [
+        [Btn(text=get_pretty_sku_name(sub["skuPartNumber"]),
+             callback_data=sub["id"],
+             callback_func=show_info)]
+        for sub in sub_list]
+    return Keyboard(buttons)

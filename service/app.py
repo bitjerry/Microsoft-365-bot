@@ -7,10 +7,12 @@
 @File: app
 """
 import json
+import os
+import io
 from core import *
-from resource import Text
+from resource import Text, res_path
 from util.helper import *
-from db import add_app, add_apps, list_apps, count
+from db import add_app, add_apps, list_apps, count, get_all_apps
 
 
 class AppSession:
@@ -56,10 +58,19 @@ def clear_cmd(msg: Message):
     bot.send_msg(msg, Text.app_clear_s)
 
 
-@bot.cmd("addmore")
+@bot.cmd("addapps")
 def add_more_cmd(msg: Message):
-    bot.send_msg(msg, Text.app_add_more)
+    with open(os.path.join(res_path, "app_template.json"), 'r', encoding="utf-8") as app_template:
+        bot.send_doc(msg, app_template, caption=Text.app_add_more)
     bot.register_next_step(add_more)
+
+
+@bot.cmd("exportapps")
+@lock
+def get_all_apps_cmd(msg: Message):
+    apps = get_all_apps()
+    apps_str = io.StringIO(json.dumps(apps, indent=3))
+    bot.send_doc(msg, apps_str, visible_file_name="app_template.json")
 
 
 @bot.callback(check=False)
@@ -98,7 +109,8 @@ def delete(msg: Message):
     app_pool.remove(session.app_id)
     session.app_id = 0
     session.total -= 1
-    bot.edit_msg(msg, Text.app_del_s)
+    bot.send_msg(msg, Text.app_del_s)
+    back_to_apps(msg)
 
 
 def rename(msg: Message):
@@ -153,8 +165,8 @@ def gen_apps_keyboard(page_index: int):
              callback_func=show_info)]
         for app_id, app_name in app_list]
     btn_page_switch = gen_page_switch(
-            page_index=page_index,
-            has_next_page=session.total - (page_index + 1) * page_size > 0)
+        page_index=page_index,
+        has_next_page=session.total - (page_index + 1) * page_size > 0)
     if btn_page_switch := btn_page_switch:
         buttons.append(btn_page_switch)
 

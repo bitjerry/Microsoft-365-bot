@@ -29,7 +29,7 @@ class SessionUtil:
             self.__sub_sessions[var] = sub_session
 
     def __get_session(self, var: str):
-        if sub_session := self.__sub_sessions.get(var, None):
+        if sub_session := self.__sub_sessions.get(var):
             return sub_session
 
         for session in set(self.__sub_sessions.values()):

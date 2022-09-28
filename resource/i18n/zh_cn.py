@@ -1,11 +1,12 @@
-about = "<b>欢迎使用 Microsoft 365 全局账户管理机器人!</b>\n<a " \
-        "href='https://github.com/bitjerry/Microsoft-365-bot'>关于</a>"
+about = "<b>欢迎使用 Microsoft 365 全局账户管理机器人!</b>\n"\
+        "<a href='https://github.com/bitjerry/Microsoft-365-bot'>Version 2.0</a>"
 cancel = "当前操作已被取消."
 expire = "会话已过期!!!"
 error = "未知错误!!!"
 null = "没有数据"
 empty = "消息为空"
 init_f = "未初始化机器人!!!"
+not_modified = "消息不需要更新"
 params_error = "没有匹配的参数类型或数据"
 page_up_btn = "⏫ 上一页"
 page_down_btn = "下一页 ⏬"
@@ -46,7 +47,7 @@ app_select = "从以下列表中指定一个app:"
 app_empty = "没有app"
 app_no = "没有app被指定"
 app_id_no = "App id 不存在"
-app_add_more = "请发送 <i>template.json</i> 以添加更多app"
+app_add_more = "下载此模板, 在填写完app信息后, 传回此模板以批量添加app"
 app_add = "发给我app数据. 请遵循以下格式:\n\napp_name\nclient_id\nclient_secret\ntenant_id\n"
 app_add_s = "添加全局管理app成功!"
 app_add_f = "添加全局管理app失败!"
@@ -84,14 +85,17 @@ user_control_back = [(0, "分配许可"),
                      (1, "我的许可"),
                      (2, "分配角色"),
                      (3, "我的角色"),
-                     (4, "删除"),
-                     (5, "重命名"),
+                     (4, "重命名"),
+                     (5, "修改显示名"),
                      (6, "重置密码"),
                      (7, "修改用户名后缀"),
-                     (8, "刷新"),
-                     (9, "返回用户列表")]
+                     (8, "删除"),
+                     (9, "禁用"),
+                     (10, "刷新"),
+                     (11, "返回用户列表")]
 user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
+user_back_btn = "返回用户"
 user_select = "从以下列表中选择一个用户:"
 user_by_name = "选择一个用户通过指定用户名: xxx@contoso.com"
 user_search = "搜索用户通过用户名 (模糊匹配)"
@@ -110,7 +114,7 @@ user_name_suffix_update_s = "用户名后缀更新成功"
 user_rename = "发给我一个新名字"
 user_rename_s = "重命名成功"
 user_reset_password = "你的新密码是: <pre>{}</pre>\n" \
-                      "请及时保存它, 出于安全起见最好在用后删除它"
+                      "请及时保存它, 出于安全考虑最好在用后删除它"
 user_lic_no = "用户没有许可证"
 user_lic_asg_btn = "分配许可"
 user_lic_asg = "你已经选择了:\n\n<i>{}</i>\n按下 <b>分配许可</b> 以为用户分配它们"
@@ -125,7 +129,9 @@ user_role_del = "选择一个角色为用户删除, 请勿重复删除"
 user_role_del_s = "角色删除成功"
 user_role_asg_s = "角色分配成功"
 user_role_no = "用户没有角色"
-user_back_btn = "返回用户"
+user_disable = "用户已被禁用"
+user_modify_display_name = user_rename
+user_modify_display_name_s = "成功修改用户的显示名"
 """
 user area
 """

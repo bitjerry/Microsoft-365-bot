@@ -3,23 +3,38 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 
-Manage the Microsoft 365 Global by the telegram bot
+通过 telegram 机器人管理你的众多全局账户
 
-Read in other languages: English | [简体中文](/README.zh-CN.md)
+使用其他语言阅读：[English](/README.en_us.md) | 简体中文
 
+**功能**
+- 同时管理多个Microsoft 365全局账户
+- 批量添加, 导出app
+- 对用户增删查改
+- 查看订阅信息, 为用户分配, 撤销订阅
+- 查看组织信息
+- 查看角色信息, 为用户分配, 撤销角色
+- 对域名的添加与删除
+- 多语言适配
+- 在Microsoft Graph API中的功能未来会陆续添加
 
-### What it can do?
 
 ---
-- Manage multiple Microsoft 365 global accounts by the bot at the same time
-- Add, delete, check or modify users
-- View subscription information, assign or revoke licenses for users
-- View organization information
-- View role information, assign or revoke roles for users
-- Functions in Microsoft graph API will be added in the future
+[目录]
 
+- 准备工作
+  - [创建微软app](#🚀创建应用)
+  - [创建机器人](#🤖创建机器人)
+- [配置](#⚙️配置参数)
+- [环境](#🥼环境)
+- [部署](#🔨部署)
+- [运行](#🏃运行)
+- [更新日志](#📝更新日志)
+- [安全保护](./docs/security.md)
+- [开发文档](./docs/dev.md)
+- [常见问题](./docs/error.md)
 
-### Create app
+### 🚀创建应用
 
 ---
 >https://aad.portal.azure.com
@@ -27,127 +42,98 @@ Read in other languages: English | [简体中文](/README.zh-CN.md)
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/1.png" alt="screenshots"></p>
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/2.png" alt="screenshots"></p>
 
-### Permissions
+#### 授予权限
 
 ---
 > Organization.Read.All, Organization.ReadWrite.All  
 > RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory  
 > User.Read.All, User.ReadWrite.All  
 > Directory.Read.All, Directory.ReadWrite.All  
+> Directory.AccessAsUser.All
 
-### Create a Robot
+### 🤖创建机器人
 
 ---
-
-<a href="https://t.me/BotFather">@BotFather</a> 
+<a href="https://t.me/BotFather">@BotFather</a>
 
 <p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/3.png" alt="screenshots"></p>
- 
 
-#### Commands
+
+#### 机器人指令
 ```
-start - Start Robot
-log - Get the log of the robot
-myapp - Specify an app
-newapp - Create a new app
-getorg - Get organization information
-getrole - Get role information
-getsub - Get subscription information
-getuser - Get user information
-getuserbyname - Gets user information (specifies user by username)
-searchuser - Get user information (by fuzzy search with username)
-addUser - Add a user
-cancel - Cancel the current operation
+start -开始机器人
+log -获取机器人运行日志
+token -app 令牌管理
+myapp -指定一个app
+newapp -新建一个app
+clearapp -清除所有app
+addapps -批量添加app
+exportapps -批量导出app
+listdomain -列出并管理域名
+adddomain -添加一个域名
+getorg -获取组织信息
+getrole -获取角色信息
+getsub -获取订阅信息
+getuser -获取所有用户
+getuserbyname -获取用户通过完整用户名
+searchuser -获取用户通过用户名模糊搜索
+adduser -添加一个用户
+cancel -取消当前操作
 ```
 
-
-### Python Runtime
+### ⚙️配置参数
 
 ---
-```bash
-python 3.10
-```
+> 考虑到一键部署的方式, 配置全部采用环境变量形式  
 
-### Install
+[❓参数说明 >>>](./docs/config.md)
 
----
-```bash
-git clone https://github.com/bitjerry/Microsoft-365-bot.git
-cd Microsoft-365-bot
-```
-
-### Deploy
+### 🥼环境
 
 ---
-
-1. Create a PostgresSQL database
-
-2. Create an application
-
-3. Setting environment variables
-   ```
-   BOT_TOKEN: Telegram bot token, get it by @BotFather
-   ADMIN_ID: Telegram user ID (e.g. 123456), usually for yourself
-   ```
-
-#### Heroku: 
+- 数据库: 关系型数据库
+- python 3.10
 
 
+### 🔨部署
+
+---
+#### Heroku部署:
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-#### Fly.io: 
-You need to do this from the command line:
+#### 其它:
 
-1. Create app
-```bash
-flyctl launch
-```
-2. Set up a Postgresql database
-3. Add environment variables to the app
-```bash
-flyctl secrets set BOT_TOKEN="xxx"
-flyctl secrets set ADMIN_ID="xxx"
-```
-4. Deployment Program
-```bash
-flyctl deploy
-```
+[❓Fly.io部署教程 >>>](./docs/fly_io.md)
 
-##### It was worth noticing that:
+[❓VPS部署教程 >>>](./docs/vps.md)
 
-<p align="center"><img src="https://cdn.jsdelivr.net/gh/bitjerry/Microsoft-365-bot@main/img/5.png" alt="screenshots"></p>
 
-#### VPS
-
-1. Prepare your database
-If you don't want to use Postgres, you can try using SQLite3 in `db/db.py`.  
-I have written a database core class in the py file, but I have not tested it.
-By the way, you can write another class to replace them, such as mysql.
-
-2. Add environment variables to the app
-3. Deployment Program
-```bash
-pip install -r requirements.txt
-python3 setup.py
-```
-
-### Run
+### 🏃运行
 
 ---
-If it is webhook just access /set_webhook, stop using /stop_webhook
+机器人有两种运行模式, 均不需要手动激活
 
-### Note
+1. *webhook*: 如果在环境变量中填入了webhook链接便自动启用
+2. *polling*: 如果没有配置webhook链接, 便自动使用此方式
 
----
-1. The program has two modes: debug and release. Mode switch in config.py `DEBUG = True`.  
-   The public and private keys of RSA will be deleted in release mode, please note that.  
-2. Some serverless may sleep regularly. **Make sure to generate RSA key pairs before deployment!!!** (in the. /db directory) 
-   or keep server awake, otherwise the state will be reset after hibernation and the key pair will be lost.
-3. The program uses flask to implement webhook, you can use polling for local development.
-4. It is important to ensure that the applications created in AZ have sufficient permissions, which APIs need which permissions to view Microsoft documents.
-   >https://docs.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0
-   
-### License
+> 建议使用 *webhook* 因为 *polling* 会不断向telegram服务器拉取消息, 相对而言会更消耗资源
+
+### 📝更新日志
+
+- 2.0
+  - 优化项目结构
+  - 通过ORM兼容多类数据库
+  - 更新数据库加密方式
+  - 添加操作密码保护
+  - 取消`webhook`需要手动启动
+  - 启动方式自动选择
+  - 对域名的操作
+  - 对app的批量添加与删除
+
+- 2.1
+  - 修复bug
+
+### ⚖️许可证
 
 ---
 MIT © [bitjerry](/LICENSE)

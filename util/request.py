@@ -6,10 +6,10 @@
 @Version: v1
 @File: requests
 """
-import json
 import logging
 import config
 import http
+import json as jsontool
 from types import FunctionType
 from http.client import HTTPSConnection
 from urllib.parse import urlencode
@@ -30,7 +30,17 @@ http.client.print = print_to_log
 
 
 class MsError(Exception):
-    ...
+
+    def __init__(self, error_body):
+        self.error_body = error_body
+
+    def __str__(self):
+        if type(self.error_body) == dict and (error := self.error_body.get("error")):
+            if type(error) == dict and (message := error.get("message")):
+                return message
+            elif message := self.error_body.get("message"):
+                return message
+        return str(self.error_body)
 
 
 class Response:
@@ -52,13 +62,11 @@ class Response:
         self.__ok = 200 <= response.status < 400
         if self.__ok:
             if self.__text and "json" in response.getheader("Content-type"):
-                self.__json = json.loads(self.__text)
+                self.__json = jsontool.loads(self.__text)
         else:
             if "json" in response.getheader("Content-Type"):
-                error: dict = json.loads(self.__text)
-                raise MsError(error["error"]["message"])
-            else:
-                raise Exception(self.__text)
+                raise MsError(jsontool.loads(self.__text))
+            raise Exception(self.__text)
 
     @property
     def json(self):
@@ -112,25 +120,28 @@ class Requests:
             url=f'/{self.__tenant_id}/oauth2/v2.0/token',
             body=urlencode(data),
             headers={'Content-Type': 'application/x-www-form-urlencoded'})
-        json_data = res.json
-        self.__access_token = json_data['access_token']
-        self.__token_expires = time() + json_data['expires_in']
+        json = res.json
+        self.__access_token = json['access_token']
+        self.__token_expires = time() + json['expires_in']
 
     @staticmethod
     def _ms_requests(func: FunctionType):
         method = func.__name__.upper()
 
-        def wrapper(self, url: str, **kwargs):
+        def wrapper(self, **kwargs):
             self._refresh_token()
-            url = f"/v1.0/{url.strip('/')}"
-            if params := kwargs.get("params", None):
-                url = f"{url}?{urlencode(params)}"
+            if url := kwargs.get("url"):
+                url = f"/v1.0/{url.strip('/')}"
+                if params := kwargs.get("params"):
+                    url = f"{url}?{urlencode(params)}"
+            else:
+                return
 
-            if data := kwargs.get("data", None):
+            if data := kwargs.get("data"):
                 body = urlencode(data)
             else:
-                json_data = kwargs.get("json", None)
-                body = json.dumps(json_data) if json_data else None
+                json = kwargs.get("json")
+                body = jsontool.dumps(json) if json else None
 
             auth_header = {'Authorization': f'Bearer {self.__access_token}'}
             headers = kwargs.get("headers", {'Content-Type': 'application/json'})

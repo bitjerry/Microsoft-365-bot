@@ -38,7 +38,7 @@ class User(MsRequest):
                 params["$search"] = f"\"userPrincipalName:{search}\""
                 headers = {"ConsistencyLevel": "eventual"}
         res = self.req.get(url=url, params=params, headers=headers)
-        next_link = res.json.get("@odata.nextLink", None)
+        next_link = res.json.get("@odata.nextLink")
         next_link = re.sub(".*?/users", "/users", next_link) if next_link else None
         return res.json["value"], next_link
 
@@ -50,17 +50,20 @@ class User(MsRequest):
         """
         return self.req.delete(url=f"users/{user_id}")
 
-    def update_infos(self,
-                     user_id: str,
-                     username: str = None,
-                     display_name: str = None,
-                     password: str = None):
+    def update_infos(
+            self,
+            user_id: str,
+            username: str = None,
+            display_name: str = None,
+            password: str = None,
+            disable: bool = False):
         """
 
         :param user_id:
         :param display_name:
         :param username:
         :param password:
+        :param disable:
         :return:
         """
         json = {}
@@ -70,6 +73,8 @@ class User(MsRequest):
             json['userPrincipalName'] = username
         if password:
             json['passwordProfile'] = {'password': password}
+        if disable:
+            json["accountEnabled"] = False
 
         self.req.patch(url=f"/users/{user_id}", json=json)
 
@@ -83,6 +88,7 @@ class User(MsRequest):
         params = {"$select": "id,"
                              "displayName, "
                              "userPrincipalName, "
+                             "accountEnabled, "
                              "mail, "
                              "otherMails, "
                              "mobilePhone, "

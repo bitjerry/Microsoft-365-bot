@@ -4,7 +4,7 @@
 @Time: 2022/9/12 23:31
 @Author: Mr.lin
 @Version: v1
-@File: __init__
+@File: db
 """
 
 from sqlalchemy import Column, String, Integer, create_engine, inspect, func
@@ -55,8 +55,7 @@ class Apps(Base):
         self.tenant_id = crypt.encrypt(tenant_id)
 
     def parse(self):
-        return [self.app_id,
-                self.name,
+        return [self.name,
                 crypt.decrypt(self.client_id),
                 crypt.decrypt(self.client_secret),
                 crypt.decrypt(self.tenant_id)]
@@ -106,7 +105,7 @@ def drop_apps():
 
 def get_all_apps() -> list:
     with get_session() as session:
-        return [dict(zip(COLUMN_NAME, app.parse()))
+        return [dict(zip(DATA_NAME, app.parse()))
                 for app in session.query(Apps).all()]
 
 
@@ -137,7 +136,7 @@ def list_apps(page_index: int, page_size: int) -> list:
             .all()
 
 
-def get_app(app_id: int) -> list:
+def get_app(app_id: int) -> (int, list):
     """
 
     :param app_id:
@@ -145,7 +144,7 @@ def get_app(app_id: int) -> list:
     """
     with get_session() as session:
         app: Apps = session.query(Apps).filter_by(app_id=app_id).first()
-        return app.parse() if app else None
+        return (app.app_id, app.parse()) if app else None
 
 
 def add_app(*app_data: str):

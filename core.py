@@ -39,7 +39,7 @@ class KeyboardButton(InlineKeyboardButton):
 
     def __init__(self,
                  text: str,
-                 callback_data: str | list = "",
+                 callback_data: Any = "",
                  callback_func: str | Callable = None,
                  *args,
                  **kwargs):
@@ -96,7 +96,7 @@ class Callback:
             msg.data = texts if len(texts) > 1 else texts[0]
             return function_id
 
-    def gen(self, func: FunctionType | str, data: str | list):
+    def gen(self, func: FunctionType | str, data: Any):
         """
         len(module_name) + len(func_flag) <= 26
         :param func:
@@ -128,7 +128,7 @@ class Bot(TeleBot):
             self.clear_step()
             message = msg.message
             if function_id := callback.parse(msg):
-                if func := self.func_map.get(function_id, None):
+                if func := self.func_map.get(function_id):
                     if function_id not in self.func_check or message.message_id in self.message_tracker:
                         return func(msg)
             bot.edit_message_text(Text.expire, message.chat.id, message.id)
@@ -138,7 +138,7 @@ class Bot(TeleBot):
             content_types=["text"])
         @self.overseer
         def __cmd(msg: Message):
-            if func := self.func_map.get(msg.text[1:], None):
+            if func := self.func_map.get(msg.text[1:]):
                 func(msg)
             else:
                 ...
@@ -152,25 +152,37 @@ class Bot(TeleBot):
 
     @staticmethod
     def __register_message(func: Callable):
-        def wrapper(self, *args, register: bool = True):
-            message = func(self, *args)
-            if register:
-                self.message_tracker[message.message_id] = get_module_name(2)
+        def wrapper(self, *args, **kwargs):
+            message = func(self, *args, **kwargs)
+            self.message_tracker[message.message_id] = get_module_name(2)
             return message
 
         return wrapper
 
     @__register_message
-    def edit_msg(self, msg: Message, text: str, keyboard: InlineKeyboardMarkup = None):
-        return self.edit_message_text(text, msg.chat.id, msg.id, reply_markup=keyboard)
+    def edit_msg(self, msg: Message, text: str, keyboard: InlineKeyboardMarkup = None, **keyword):
+        return self.edit_message_text(
+            text=text,
+            chat_id=msg.chat.id,
+            message_id=msg.id,
+            reply_markup=keyboard,
+            **keyword)
 
     @__register_message
-    def send_msg(self, msg: Message, text: str, keyboard: InlineKeyboardMarkup = None):
-        return self.send_message(msg.chat.id, text, reply_markup=keyboard)
+    def send_msg(self, msg: Message, text: str, keyboard: InlineKeyboardMarkup = None, **keyword):
+        return self.send_message(
+            chat_id=msg.chat.id,
+            text=text,
+            reply_markup=keyboard,
+            **keyword)
 
     @__register_message
-    def send_doc(self, msg: Message, doc: str, keyboard: InlineKeyboardMarkup = None):
-        return self.send_document(msg.chat.id, doc, reply_markup=keyboard)
+    def send_doc(self, msg: Message, doc: str, keyboard: InlineKeyboardMarkup = None, **keyword):
+        return self.send_document(
+            chat_id=msg.chat.id,
+            document=doc,
+            reply_markup=keyboard,
+            **keyword)
 
     def clear_all_msg(self):
         self.message_tracker.clear()
@@ -187,10 +199,11 @@ class Bot(TeleBot):
                 return func(*args, **kwargs)
             except Exception as e:
                 if e.__class__.__name__ in ["CryptError", "MsError"]:
-                    self.send_message(self.ADMIN_ID, str(e))
-                else:
-                    logger.exception(e)
-                    self.send_message(self.ADMIN_ID, Text.error)
+                    return self.send_message(self.ADMIN_ID, str(e))
+                elif hasattr(e, "error_code") and e.error_code == 400:
+                    return self.send_message(self.ADMIN_ID, Text.not_modified)
+                logger.exception(e)
+                self.send_message(self.ADMIN_ID, Text.error)
 
         return wrapper
 
@@ -199,6 +212,7 @@ class Bot(TeleBot):
         :param command: default use function name as bot command. no `/`
         :return:
         """
+
         def wrapper(func: Callable):
             nonlocal command
             if not command or type(command) == FunctionType:

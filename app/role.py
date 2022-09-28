@@ -73,4 +73,4 @@ class Role(MsRequest):
         :return:
         """
         url = f"/directoryRoles/roleTemplateId={role_id}/members/{user_id}/$ref"
-        self.req.delete(url)
+        self.req.delete(url=url)

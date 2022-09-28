@@ -10,6 +10,7 @@ from core import *
 from resource import Text
 from util.helper import *
 
+
 class RoleSession:
 
     def __init__(self):
@@ -56,11 +57,10 @@ def get_member(msg: Message, app: App):
     text = '\n'.join([member['userPrincipalName'] for member in members])
     if not text:
         return bot.send_msg(msg, Text.role_no_user)
-    keyboard = Keyboard(
-        [[Btn(text=Text.role_back_btn,
-              callback_data=session.role_id,
-              callback_func=show_info)]])
-    bot.edit_msg(msg, text, keyboard)
+    buttons = [[Btn(text=Text.role_back_btn,
+                    callback_data=session.role_id,
+                    callback_func=show_info)]]
+    bot.edit_msg(msg, text, Keyboard(buttons))
 
 
 def back_to_roles(msg: Message, app: App):
@@ -73,8 +73,9 @@ def back_to_roles(msg: Message, app: App):
 def gen_roles_keyboard(app: App):
     if not (role_list := app.Role.get_all()):
         return None
-    return Keyboard(
-        [[Btn(text=role["displayName"],
-              callback_data=role['id'],
-              callback_func=show_info)]
-         for role in role_list])
+    buttons = [
+        [Btn(text=role["displayName"],
+             callback_data=role['id'],
+             callback_func=show_info)]
+        for role in role_list]
+    return Keyboard(buttons)

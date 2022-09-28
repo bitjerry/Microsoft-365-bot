@@ -18,7 +18,7 @@ from collections import defaultdict, OrderedDict
 __all__ = ["App", "app_pool"]
 
 for f in os.listdir(os.path.dirname(__file__)):
-    if f.endswith('.py') and f != 'db.py':
+    if f.endswith('.py') and f != '__init__.py':
         import_module(f".{f[:-3]}", __package__)
 
 module_class_list = MsRequest.__subclasses__()
@@ -95,7 +95,7 @@ class AppPool:
         if app_id in self._id_freq_map:
             return self.__get(app_id)
         elif app := get_app(app_id):
-            app_obj = App(*app)
+            app_obj = App(app[0], *app[1])
             self.__put(app_id, app_obj)
             return app_obj
 
