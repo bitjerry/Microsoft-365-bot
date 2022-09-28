@@ -288,6 +288,7 @@ class Bot(TeleBot):
 
     def polling(self, *args, **kwargs):
         self.__messages_notify()
+        self.delete_webhook()
         super().polling(*args, **kwargs)
 
 

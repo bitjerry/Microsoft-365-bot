@@ -91,14 +91,16 @@ def show_info(msg: CallbackQuery, app: App):
 def show_license_assign(msg: CallbackQuery):
     skus = session.skus
     store_lic_sel(msg.data[0], msg.data[1], skus)
-    bot.edit_msg(msg.message, Text.user_lic_asg.format('\n'.join(skus.values())), msg.message.reply_markup)
+    bot.edit_msg(msg.message, Text.user_lic_asg.format('\n'.join(skus.values())),
+                 msg.message.reply_markup)
 
 
 @bot.callback
 def show_license_delete(msg: CallbackQuery):
     skus_del = session.skus_del
     store_lic_sel(msg.data[0], msg.data[1], skus_del)
-    bot.edit_msg(msg.message, Text.user_lic_del.format('\n'.join(skus_del.values())), msg.message.reply_markup)
+    bot.edit_msg(msg.message, Text.user_lic_del.format('\n'.join(skus_del.values())),
+                 msg.message.reply_markup)
 
 
 @bot.callback
@@ -147,7 +149,8 @@ def get_next_page(msg: CallbackQuery, app: App):
 @bot.callback
 @app_injector
 def add(msg: CallbackQuery, app: App):
-    keyboard = Keyboard([[Btn(text=Text.user_name_suffix_back, callback_func=back_to_name_suffix_list)]])
+    keyboard = Keyboard([[Btn(text=Text.user_name_suffix_back,
+                              callback_func=back_to_name_suffix_list)]])
     bot.edit_msg(msg.message, Text.user_data, keyboard)
     bot.register_next_step(show_added_info, app, msg)
 
@@ -294,7 +297,8 @@ def show_added_info(msg: Message, app: App, callback_msg: CallbackQuery):
     password = input_data[1] if len(input_data) > 1 else gen_password()
     session.user_id = app.User.create(username, password)
     session.username = username.split("@")
-    bot.send_msg(callback_msg.message, Text.user_create_s.format(username, password), control_keyboard)
+    bot.send_msg(callback_msg.message, Text.user_create_s.format(username, password),
+                 control_keyboard)
 
 
 def list_roles_asg(msg: CallbackQuery, app: App):

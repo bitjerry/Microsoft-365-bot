@@ -7,8 +7,8 @@
 @File: requests
 """
 import logging
-import config
 import http
+import config
 import json as jsontool
 from types import FunctionType
 from http.client import HTTPSConnection

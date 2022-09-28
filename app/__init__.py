@@ -10,10 +10,11 @@ Office 365 Global App
 """
 import os
 from importlib import import_module
+from collections import defaultdict, OrderedDict
 from resource import Text
 from db import *
 from util.request import *
-from collections import defaultdict, OrderedDict
+
 
 __all__ = ["App", "app_pool"]
 
