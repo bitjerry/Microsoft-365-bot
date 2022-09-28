@@ -56,14 +56,14 @@ class User(MsRequest):
             username: str = None,
             display_name: str = None,
             password: str = None,
-            disable: bool = False):
+            enable: bool = True):
         """
 
         :param user_id:
         :param display_name:
         :param username:
         :param password:
-        :param disable:
+        :param enable:
         :return:
         """
         json = {}
@@ -73,8 +73,8 @@ class User(MsRequest):
             json['userPrincipalName'] = username
         if password:
             json['passwordProfile'] = {'password': password}
-        if disable:
-            json["accountEnabled"] = False
+
+        json["accountEnabled"] = enable
 
         self.req.patch(url=f"/users/{user_id}", json=json)
 

@@ -115,9 +115,10 @@ The bot has two modes of work and does not require manual activation.
   - Automatic selection of startup mode
   - Operation on domain name
   - Batch addition and deletion of apps
-
 - 2.1
   - Fix bug
+- 2.2
+  - Add disable/enable function for users
 
 ### 📖More
 

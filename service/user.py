@@ -202,8 +202,10 @@ def control(msg: CallbackQuery, app: App):
         case 9:
             disable(msg.message, app)
         case 10:
-            refresh(msg.message, app)
+            enable(msg.message, app)
         case 11:
+            refresh(msg.message, app)
+        case 12:
             back_to_users(msg.message, app)
         case _:
             raise Exception(Text.match_error)
@@ -211,8 +213,14 @@ def control(msg: CallbackQuery, app: App):
 
 @lock
 def disable(msg: Message, app: App):
-    app.User.update_infos(session.user_id, disable=True)
+    app.User.update_infos(session.user_id, enable=False)
     bot.send_msg(msg, Text.user_disable)
+
+
+@lock
+def enable(msg: Message, app: App):
+    app.User.update_infos(session.user_id, enable=True)
+    bot.send_msg(msg, Text.user_enable)
 
 
 @lock

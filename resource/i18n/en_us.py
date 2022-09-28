@@ -91,8 +91,9 @@ user_control_back = [(0, "Assign license"),
                      (7, "Chang name suffix"),
                      (8, "Delete"),
                      (9, "Disable"),
-                     (10, "Refresh"),
-                     (11, "Back to user list")]
+                     (10, "Enable"),
+                     (11, "Refresh"),
+                     (12, "Back to user list")]
 user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
 user_back_btn = "Back to user"
@@ -130,6 +131,7 @@ user_role_del_s = "Role deleted successfully"
 user_role_asg_s = "Role assigned successfully"
 user_role_no = "Oops!!! No role for user"
 user_disable = "User has been disabled"
+user_enable = "User has been enabled"
 user_modify_display_name = user_rename
 user_modify_display_name_s = "Successfully modified the display name"
 

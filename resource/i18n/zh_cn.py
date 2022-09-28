@@ -1,4 +1,4 @@
-about = "<b>欢迎使用 Microsoft 365 全局账户管理机器人!</b>\n"\
+about = "<b>欢迎使用 Microsoft 365 全局账户管理机器人!</b>\n" \
         "<a href='https://github.com/bitjerry/Microsoft-365-bot'>Version 2.0</a>"
 cancel = "当前操作已被取消."
 expire = "会话已过期!!!"
@@ -91,8 +91,9 @@ user_control_back = [(0, "分配许可"),
                      (7, "修改用户名后缀"),
                      (8, "删除"),
                      (9, "禁用"),
-                     (10, "刷新"),
-                     (11, "返回用户列表")]
+                     (10, "启用"),
+                     (11, "刷新"),
+                     (12, "返回用户列表")]
 user_control_back_only = user_control_back[-1:]
 user_control = user_control_back[:-1]
 user_back_btn = "返回用户"
@@ -102,7 +103,7 @@ user_search = "搜索用户通过用户名 (模糊匹配)"
 user_no = "没有用户"
 user_name = "当前用户名是: <b>{}</b>\n"
 user_data = "发给我用户信息. 请遵循以下格式:\n\nusername\npassword (可选)"
-user_create_s = "<b>成功创建用户\n此信息仅显示一次!!!\n"\
+user_create_s = "<b>成功创建用户\n此信息仅显示一次!!!\n" \
                 "为了密码安全起见, 请在用后删除此信息</b>" \
                 "\n===========\n\nUsername: {}\nPassword: {}"
 user_delete_s = "用户被成功删除"
@@ -130,6 +131,7 @@ user_role_del_s = "角色删除成功"
 user_role_asg_s = "角色分配成功"
 user_role_no = "用户没有角色"
 user_disable = "用户已被禁用"
+user_enable = "用户已被启用"
 user_modify_display_name = user_rename
 user_modify_display_name_s = "成功修改用户的显示名"
 """
