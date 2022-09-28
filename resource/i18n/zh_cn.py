@@ -14,7 +14,7 @@ page_down_btn = "下一页 ⏬"
 bot area
 """
 
-key = "<i>令牌仅显示一次, 并且将在10秒后被销毁.\n<pre>{}</pre>\n" \
+key = "<i>令牌仅显示一次, 并且将在300秒后被销毁.\n<pre>{}</pre>\n" \
       "请及时保存它.</i>"
 key_hidden = "<pre>{}</pre>"
 key_ops = [(0, "解锁"), (1, "生成")]

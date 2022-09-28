@@ -41,7 +41,7 @@ def control(msg: CallbackQuery):
             new(msg.message)
 
 
-@task.delay(10)
+@task.delay(300)
 def hidden(msg: Message):
     bot.edit_msg(msg, Text.key_hidden.format(crypt.key), keyboard_op)
 

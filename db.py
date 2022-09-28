@@ -74,8 +74,7 @@ def get_session() -> Session:
         session.close()
 
 
-inspector = inspect(engine)
-if not inspector.has_table(TABLE_NAME):
+def create():
     Base.metadata.create_all(engine, checkfirst=False)
 
 
@@ -198,3 +197,13 @@ def update_app_info(app_id: int, *app_info: str):
 def delete_app(app_id: int):
     with get_session() as session:
         session.query(Apps).filter_by(app_id=app_id).delete()
+
+
+inspector = inspect(engine)
+if inspector.has_table(TABLE_NAME):
+    COLUMN_NAME_EXIST = [col["name"] for col in inspector.get_columns(TABLE_NAME)]
+    if COLUMN_NAME_EXIST != COLUMN_NAME:
+        drop_apps()
+        create()
+else:
+    create()

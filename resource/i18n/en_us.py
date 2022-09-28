@@ -14,7 +14,7 @@ page_down_btn = "page down ⏬"
 bot area
 """
 
-key = "<i>The token is only shown once and will be hidden in 10 seconds.\n<pre>{}</pre>\n" \
+key = "<i>The token is only shown once and will be hidden in 300 seconds.\n<pre>{}</pre>\n" \
       "Please save that in time.</i>"
 key_hidden = "<pre>{}</pre>"
 key_ops = [(0, "Unlock"), (1, "New")]
