@@ -11,7 +11,7 @@ import threading
 import logging
 import config
 from resource import Text
-from app import app_pool
+from app import App, app_pool
 from core import *
 from typing import Callable
 
