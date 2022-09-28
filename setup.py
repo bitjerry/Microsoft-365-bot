@@ -32,6 +32,9 @@ try:
 except Exception:
     traceback.print_exc()
 
+if not (update_url := urlparse(config.WEBHOOK_URL).path):
+    update_url = '/'
+
 app = Flask(__name__)
 
 
@@ -40,7 +43,7 @@ def start():
     return '!', 200
 
 
-@app.post(urlparse(config.WEBHOOK_URL).path + '/')
+@app.post(update_url)
 def get_message():
     request_body_dict = request.get_data().decode('utf-8')
     bot.update_message(request_body_dict)
@@ -50,8 +53,8 @@ def get_message():
 if __name__ == '__main__':
     # noinspection PyBroadException
     try:
-        if config.WEBHOOK_URL.startswith("https://"):
-            bot.set_webhook(config.WEBHOOK_URL)
+        if config.WEBHOOK_URL and config.WEBHOOK_URL.startswith("https://"):
+            bot.webhook(config.WEBHOOK_URL)
             app.run(host="0.0.0.0", port=int(config.PORT))
         else:
             bot.polling(non_stop=True)

@@ -200,7 +200,7 @@ class Bot(TeleBot):
             except Exception as e:
                 if e.__class__.__name__ in ["CryptError", "MsError"]:
                     return self.send_message(self.ADMIN_ID, str(e))
-                elif hasattr(e, "error_code") and e.error_code == 400:
+                elif hasattr(e, "description") and "not modified" in e.description:
                     return self.send_message(self.ADMIN_ID, Text.not_modified)
                 logger.exception(e)
                 self.send_message(self.ADMIN_ID, Text.error)
@@ -282,7 +282,7 @@ class Bot(TeleBot):
     def update_message(self, message):
         return self.process_new_updates([Update.de_json(message)])
 
-    def set_webhook(self, *args, **kwargs):
+    def webhook(self, *args, **kwargs):
         self.__messages_notify()
         super().set_webhook(*args, **kwargs)
 
