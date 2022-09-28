@@ -31,7 +31,14 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG if config.DEBUG el
 URI = config.DATABASE_URL
 if URI.startswith("postgres://"):
     URI = URI.replace("postgres://", "postgresql://", 1)
-engine = create_engine(URI, echo=False)
+engine = create_engine(
+    URI,
+    echo=False,
+    pool_size=10,
+    max_overflow=2,
+    pool_recycle=300,
+    pool_pre_ping=True,
+    pool_use_lifo=True)
 Base = declarative_base()
 
 
