@@ -7,6 +7,7 @@ processes = []
 
 [build]
   builder = "heroku/buildpacks:latest"
+  buildpacks = ["heroku/python-3.10.8"]
 
 [env]
   PORT = "8080"
