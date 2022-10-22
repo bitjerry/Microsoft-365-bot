@@ -40,7 +40,7 @@ Type: String
 > Welcome page path, which is valid only when webhook mode is enabled, to check whether webhook is set correctly.  
 > The path is a relative path. If this parameter is not specified, the root path is `/` by default  
 > If you do not want the program to be scanned, it is recommended to change  
-#### LANG
+#### BOT_LANG
 Type: String
 > The robot user interface supports multiple languages, the default is American English `en_us`. Optional Simplified Chinese `zh_cn`  
 > For details, see `./resource/i18n`  
