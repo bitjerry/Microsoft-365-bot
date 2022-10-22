@@ -7,6 +7,7 @@
 @File: resource
 """
 import csv
+import logging
 from os.path import dirname, join
 
 import config
@@ -41,4 +42,7 @@ def get_pretty_sku_name(name: str) -> str:
 Text = en_us
 
 if config.lang:
-    Text = import_module(f".{config.lang}", f"{__package__}.i18n")
+    try:
+        Text = import_module(f".{config.lang}", f"{__package__}.i18n")
+    except Exception as e:
+        logging.exception(e)
