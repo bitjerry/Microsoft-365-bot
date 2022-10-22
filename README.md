@@ -49,21 +49,21 @@
 ```
 start -开始机器人
 log -获取机器人运行日志
-token -app 令牌管理
+key -保护app数据
 myapp -指定一个app
 newapp -新建一个app
-clearapp -清除所有app
 addapps -批量添加app
 exportapps -批量导出app
+clearapp -清除所有app
+adduser -添加一个用户
+getuser -获取所有用户
+getuserbyname -获取用户通过完整用户名
+searchuser -获取用户通过用户名模糊搜索
 listdomain -列出并管理域名
 adddomain -添加一个域名
 getorg -获取组织信息
 getrole -获取角色信息
 getsub -获取订阅信息
-getuser -获取所有用户
-getuserbyname -获取用户通过完整用户名
-searchuser -获取用户通过用户名模糊搜索
-adduser -添加一个用户
 cancel -取消当前操作
 ```
 
@@ -72,7 +72,7 @@ cancel -取消当前操作
 ---
 > 考虑到一键部署的方式, 配置全部采用环境变量形式  
 
-[❓参数说明 >>>](./docs/config.md)
+[❓参数说明 >>>](docs/zh_cn/config.md)
 
 ### 🥼环境
 
@@ -89,9 +89,9 @@ cancel -取消当前操作
 
 #### 其它:
 
-[❓Fly.io部署教程 >>>](./docs/fly_io.md)
+[❓Fly.io部署教程 >>>](docs/zh_cn/fly_io.md)
 
-[❓VPS部署教程 >>>](./docs/vps.md)
+[❓VPS部署教程 >>>](docs/zh_cn/vps.md)
 
 
 ### 🏃运行
@@ -119,12 +119,18 @@ cancel -取消当前操作
   - 修复bug
 - 2.2
   - 添加对用户的禁用/启用
+- 2.3
+  - 完善对安全密钥的管理
+  - 完善英文文档
+  - 添加程序界面展示图
+  - 修复用户列表串号问题
+  - 优化代码, 及更详细的注释
 
 ### 📖更多资料
 
-- [安全保护](./docs/security.md)
-- [开发文档](./docs/dev.md)
-- [常见问题](./docs/error.md)
+- [安全保护](docs/zh_cn/security.md)
+- [开发文档](docs/zh_cn/dev.md)
+- [常见问题](docs/zh_cn/error.md)
 
 ### ⚖️许可证
 

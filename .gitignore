@@ -17,6 +17,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+test/
 build/
 develop-eggs/
 dist/
@@ -78,7 +79,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+../docs/_build/
 
 # PyBuilder
 .pybuilder/
@@ -145,4 +146,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-

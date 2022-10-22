@@ -11,7 +11,6 @@
   "website": "https://github.com/bitjerry/Microsoft-365-bot",
   "repository": "https://github.com/bitjerry/Microsoft-365-bot",
   "logo": "https://www.microsoft.com/favicon.ico",
-  "success_url": "/set_webhook",
   "env": {
     "BOT_TOKEN": {
       "description": "Telegram bot token, get it by @BotFather."

@@ -1,1 +1,1 @@
-web: python3.10 setup.py
+web: python3.10 src/setup.py

@@ -49,7 +49,7 @@ Read in other languages: English | [简体中文](/README.md)
 ```
 start - Start Robot
 log - Get the log of the robot
-token -Manage app token 
+key -Protect app data
 myapp - Specify an app
 newapp - Create a new app
 clearapp - Clear all app
@@ -70,9 +70,9 @@ cancel - Cancel the current operation
 ### ⚙️Config
 
 ---
-> Considering one-click deployment, configurations are all in the form of environment variables. 
+> Considering one-button deployment, configurations are all in the form of environment variables.   
 
-[❓Instructions >>>](./docs/config.md)
+[❓Instructions >>>](docs/zh_cn/config.md)
 
 ### 🥼Runtime
 
@@ -89,9 +89,9 @@ cancel - Cancel the current operation
 
 #### Others:
 
-[❓Fly.io >>>](./docs/fly_io.md)
+[❓Fly.io >>>](docs/zh_cn/fly_io.md)
 
-[❓VPS >>>](./docs/vps.md)
+[❓VPS >>>](docs/zh_cn/vps.md)
 
 
 ### 🏃Run
@@ -119,12 +119,14 @@ The bot has two modes of work and does not require manual activation.
   - Fix bug
 - 2.2
   - Add disable/enable function for users
+- 2.3
+  - Perfect management of security keys
 
 ### 📖More
 
-- [Security](./docs/security.md)
-- [Document](./docs/dev.md)
-- [FAQ](./docs/error.md)
+- [Security](docs/zh_cn/security.md)
+- [Document](docs/zh_cn/dev.md)
+- [FAQ](docs/zh_cn/error.md)
 
 ### ⚖️License
 
