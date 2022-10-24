@@ -122,7 +122,7 @@ class Task:
 
     def cancel(self, name: str):
         """
-        Cancel a specified taskCancel a specified task by the task name
+        Cancel a specified task by the task name
 
         :param name: task name
         :type name:
@@ -281,7 +281,7 @@ class Format:
 
 def app_autowired(func: Callable):
     """
-    Inject the app object into the function as a decorator.
+    As a decorator to inject the app object into the function
 
     Throws an exception if the object does not exist
 
