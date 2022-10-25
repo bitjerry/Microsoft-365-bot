@@ -8,7 +8,7 @@ Type: String
 > Telegram robot token, available at @BotFather
 #### ADMIN_ID
 Type: Int
-> id of the robot user. It is believed that no one wants to share private property with others.
+> The id of telegram bot user. It is believed that no one wants to share private property with others.
 ### Optional
 #### PORT
 Type: Int
@@ -37,7 +37,7 @@ Type: String
 > It is recommended to fill this in, just fill in a url *https://.* (note: must be https)  
 #### WELCOME_URL
 Type: String
-> Welcome page path, which is valid only when webhook mode is enabled, to check whether webhook is set correctly.  
+> Welcome page path, which is valid only when webhook mode is enabled, to check whether webhook is enabled.  
 > The path is a relative path. If this parameter is not specified, the root path is `/` by default  
 > If you do not want the program to be scanned, it is recommended to change  
 #### BOT_LANG
