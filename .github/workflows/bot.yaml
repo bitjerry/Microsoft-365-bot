@@ -2,7 +2,6 @@ name: Fly Deploy
 on: [workflow_dispatch]
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  APP_NAME: ${{ secrets.APP_NAME }}
 jobs:
   deploy:
       name: Microsoft-bot
@@ -10,4 +9,4 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy --app env.APP_NAME --remote-only
+        - run: flyctl deploy --app ${{ secrets.APP_NAME }} --remote-only
