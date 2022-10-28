@@ -170,13 +170,15 @@ def add_apps(apps: list):
     :param apps: all app
     :return:
     """
-    if apps:
-        for app in apps:
-            app["client_id"] = crypt.encrypt(str(app["client_id"]))
-            app["client_secret"] = crypt.encrypt(str(app["client_secret"]))
-            app["tenant_id"] = crypt.encrypt(str(app["tenant_id"]))
-        with get_session() as session:
-            session.execute(Apps.__table__.insert(), apps)
+    if not apps:
+        return
+
+    for app in apps:
+        app["client_id"] = crypt.encrypt(str(app["client_id"]))
+        app["client_secret"] = crypt.encrypt(str(app["client_secret"]))
+        app["tenant_id"] = crypt.encrypt(str(app["tenant_id"]))
+    with get_session() as session:
+        session.execute(Apps.__table__.insert(), apps)
 
 
 def rename_app(app_id: int, new_name: str):

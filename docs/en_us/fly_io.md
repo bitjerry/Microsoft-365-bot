@@ -10,7 +10,10 @@ cd Microsoft-365-bot
 ```bash
 flyctl launch
 ```
-3. Setting up a Postgres database for your application
+3. Attach a Postgres database to your application
+```bash
+flyctl postgres attach --app app_name db_name #app_name application name, db_name database name
+```
 4. Add environment variables (required)
 > [More optional >>>](config.md)
 ```bash

@@ -132,6 +132,8 @@ The bot has two modes of work and does not require manual activation.
   - Add user interface preview
   - Fixed the user module data inconsistency bug
   - Optimized code structure, and more detailed comments
+- 2.4
+  - Fix the bug deploy on fly.io by GitHub Action
 
 ### 📖More
 
