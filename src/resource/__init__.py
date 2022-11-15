@@ -41,8 +41,8 @@ def get_pretty_sku_name(name: str) -> str:
 
 Text = en_us
 
-if config.lang:
+if config.LANG:
     try:
-        Text = import_module(f".{config.lang}", f"{__package__}.i18n")
+        Text = import_module(f".{config.LANG}", f"{__package__}.i18n")
     except Exception as e:
         logging.exception(e)

@@ -26,7 +26,8 @@ COLUMN_NAME = ["app_id", "name", "client_id", "client_secret", "tenant_id"]
 DATA_NAME = COLUMN_NAME[1:]
 INFO_NAME = DATA_NAME[1:]
 
-logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG if config.DEBUG else logging.NOTSET)
+logger = logging.getLogger('sqlalchemy.engine')
+logger.setLevel(logging.DEBUG if config.DEBUG else logging.NOTSET)
 
 URI = config.DATABASE_URL
 if URI.startswith("postgres://"):
@@ -210,9 +211,11 @@ def delete_app(app_id: int):
 
 inspector = inspect(engine)
 if inspector.has_table(TABLE_NAME):
-    COLUMN_NAME_EXIST = [col["name"] for col in inspector.get_columns(TABLE_NAME)]
-    if COLUMN_NAME_EXIST != COLUMN_NAME:
+    COLUMN_NAME_EXIST = {col["name"] for col in inspector.get_columns(TABLE_NAME)}
+    if COLUMN_NAME_EXIST != set(COLUMN_NAME):
+        logger.info(f"Rebuilding Apps Table... The origin columns name is {COLUMN_NAME_EXIST}")
         drop_apps()
         create()
 else:
+    logger.info(f"Create Apps Table...")
     create()
