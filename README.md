@@ -134,6 +134,8 @@ The bot has two modes of work and does not require manual activation.
   - Optimized code structure, and more detailed comments
 - 2.4
   - Fix the bug deploy on fly.io by GitHub Action
+- 2.5
+  - Fix the bug for table creating
 
 ### 📖More
 
