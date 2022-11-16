@@ -129,7 +129,7 @@ def edit_info(msg: Message):
         bot.send_msg(msg, Text.app_edit_s)
     else:
         bot.send_msg(msg, Text.app_info_f)
-        bot.register_next_step(edit)
+        bot.register_next_step(edit_info)
 
 
 def add(msg: Message):
