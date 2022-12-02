@@ -100,6 +100,7 @@ cancel -取消当前操作
 
 [❓VPS部署教程 >>>](docs/zh_cn/vps.md)
 
+[?Docker部署教程 >>>](docs/zh_cn/docker.md)
 
 ### 🏃运行
 
@@ -136,6 +137,8 @@ cancel -取消当前操作
   - 修复fly.io通过GitHub Action部署的bug
 - 2.5
   - 修复数据库创建检测的bug
+  - 修复对app信息修改的bug
+  - 添加对docker部署的支持
 
 ### 📖更多资料
 

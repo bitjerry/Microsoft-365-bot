@@ -9,6 +9,19 @@ Type: String
 #### ADMIN_ID
 Type: Int
 > The id of telegram bot user. It is believed that no one wants to share private property with others.
+
+### Suggest
+#### WEBHOOK_URL
+Type: String
+> Set up a webhook link that will allow your application to listen to the telegram server instead of pulling messages from it  
+> This option will enable the webhook mode. Otherwise, the default mode is polling   
+> It is recommended to fill this in, just fill in a url *https://.* (note: must be https)  
+#### BOT_LANG
+Type: String
+> The robot user interface supports multiple languages, the default is American English `en_us`. Optional Simplified Chinese `zh_cn`  
+> For details, see `./resource/i18n`  
+[>>> Localization development](dev.md)
+
 ### Optional
 #### PORT
 Type: Int
@@ -30,21 +43,12 @@ Type: Int
 > This parameter is valid only when `SECRET` is set.  
 > Maximum number of password retries. Sensitive operations will be locked if this number is exceeded. You can try to restart the service  
 > The default value is `-1` with no limit on the number of errors.  
-#### WEBHOOK_URL
-Type: String
-> Set up a webhook link that will allow your application to listen to the telegram server instead of pulling messages from it  
-> This option will enable the webhook mode. Otherwise, the default mode is polling   
-> It is recommended to fill this in, just fill in a url *https://.* (note: must be https)  
+
 #### WELCOME_URL
 Type: String
 > Welcome page path, which is valid only when webhook mode is enabled, to check whether webhook is enabled.  
 > The path is a relative path. If this parameter is not specified, the root path is `/` by default  
-> If you do not want the program to be scanned, it is recommended to change  
-#### BOT_LANG
-Type: String
-> The robot user interface supports multiple languages, the default is American English `en_us`. Optional Simplified Chinese `zh_cn`  
-> For details, see `./resource/i18n`  
-[>>> Localization development](dev.md)
+> If you do not want the program to be scanned, it is recommended to change
 #### EXPIRE_KEY
 Type: Int
 > App encryption key display time, after the expiration will be hidden, no longer visible  

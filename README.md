@@ -100,6 +100,7 @@ cancel - Cancel the current operation
 
 [❓VPS >>>](docs/en_us/vps.md)
 
+[?Docker >>>](docs/en_us/docker.md)
 
 ### 🏃Run
 
@@ -136,6 +137,8 @@ The bot has two modes of work and does not require manual activation.
   - Fix the bug deploy on fly.io by GitHub Action
 - 2.5
   - Fix the bug for table creating
+  - Fix the bug that modify app information
+  - Add the support for docker
 
 ### 📖More
 
