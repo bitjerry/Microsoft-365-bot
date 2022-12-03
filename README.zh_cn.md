@@ -100,7 +100,7 @@ cancel -取消当前操作
 
 [❓VPS部署教程 >>>](docs/zh_cn/vps.md)
 
-[?Docker部署教程 >>>](docs/zh_cn/docker.md)
+[❓Docker部署教程 >>>](docs/zh_cn/docker.md)
 
 ### 🏃运行
 
